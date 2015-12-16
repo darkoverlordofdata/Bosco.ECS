@@ -1,3 +1,3 @@
 * ecs-fsharp
 
-experiments using an ecs in unity+fsharp
+experiments using an ecs with unity+fsharp

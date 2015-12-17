@@ -7,14 +7,14 @@ namespace Entitas
   [<AbstractClass>][<AllowNullLiteral>]
   type ASystem() = class end
 
-  [<AbstractClass>]
-  type IInitializeSystem() =
-    inherit ASystem()
+  //[<AbstractClass>]
+  type IInitializeSystem =
+    //inherit ASystem()
     abstract member Initialize: unit -> unit
 
-  [<AbstractClass>]
-  type IExecuteSystem() =
-    inherit ASystem()
+  //[<AbstractClass>]
+  type IExecuteSystem =
+    //inherit ASystem()
     abstract member Execute: unit -> unit
 
 
@@ -43,14 +43,45 @@ namespace Entitas
    * Matcher
    *)
   type Matcher () =
+    static let mutable uniqueId           = 0
+    do uniqueId <- uniqueId+1
 
+    let _id                               = uniqueId
     let mutable _indices                  = Array.empty
-    let mutable allOfIndices              = Array.empty
-    let mutable anyOfIndices              = Array.empty
-    let mutable noneOfIndices             = Array.empty
+    let mutable _allOfIndices             = Array.empty
+    let mutable _anyOfIndices             = Array.empty
+    let mutable _noneOfIndices            = Array.empty
     let mutable toStringCache             = ""
 
-    member val indices                    = _indices with get
+    member this.Id
+      with get() = _id
+    member this.Indices
+      with get() = _indices
+    member this.AllOfIndices
+      with get() =_allOfIndices
+      and  set(value) = _allOfIndices <- value
+    member this.AnyOfIndices
+      with get() = _anyOfIndices
+      and  set(value) = _anyOfIndices <- value
+    member this.NoneOfIndices
+      with get() = _noneOfIndices
+      and  set(value) = _noneOfIndices <- value
+
+    static member AllOf([<ParamArray>] indices: int[]) =
+      let matcher = new Matcher()
+      matcher.AllOfIndices <- Matcher.distinctIndices(indices)
+      matcher
+
+    static member AllOf([<ParamArray>] matchers: Matcher[]) =
+      Matcher.AllOf(Matcher.mergeIndices(matchers))
+
+    static member AnyOf([<ParamArray>] indices: int[]) =
+      let matcher = new Matcher()
+      matcher.AnyOfIndices <- Matcher.distinctIndices(indices)
+      matcher
+
+    static member AnyOf([<ParamArray>] matchers: Matcher[]) =
+      Matcher.AnyOf(Matcher.mergeIndices(matchers))
 
     (** 
      * AnyOf 
@@ -59,7 +90,7 @@ namespace Entitas
      * @returns this 
      *)
     member this.AnyOf([<ParamArray>] indices: int[]) =
-      anyOfIndices <- Matcher.distinctIndices(_indices)
+      _anyOfIndices <- Matcher.distinctIndices(_indices)
       _indices <- Array.empty
       this
 
@@ -73,7 +104,7 @@ namespace Entitas
      * @returns this 
      *)
     member this.NoneOf([<ParamArray>] indices: int[]) =
-      noneOfIndices <- Matcher.distinctIndices(_indices)
+      _noneOfIndices <- Matcher.distinctIndices(_indices)
       _indices <- Array.empty
       this
 
@@ -87,23 +118,11 @@ namespace Entitas
      * @returns true if entity is a match 
      *)
     member this.Matches(entity:AEntity) =
-      let matchesAllOf = 
-        match allOfIndices with 
-        | null -> true
-        | _ -> entity.HasComponents(allOfIndices)
-      
-      let matchesAnyOf =
-        match anyOfIndices with 
-        | null -> true
-        | _ -> entity.HasComponents(anyOfIndices)
-
-      let matchesNoneOf =
-        match noneOfIndices with 
-        | null -> true
-        | _ -> not(entity.HasComponents(noneOfIndices))
-
+      let matchesAllOf = if _allOfIndices.Length = 0 then true else entity.HasComponents(_allOfIndices)
+      let matchesAnyOf = if _anyOfIndices.Length = 0 then true else entity.HasAnyComponent(_allOfIndices)
+      let matchesNoneOf = if _noneOfIndices.Length = 0 then true else not(entity.HasAnyComponent(_allOfIndices))
       matchesAllOf && matchesAnyOf && matchesNoneOf
-      
+
 
     (** 
      * mergeIndicse 
@@ -115,9 +134,9 @@ namespace Entitas
       let mutable indices = (Array.zeroCreate matchers.Length)
       for i=0 to matchers.Length do
         let matcher = matchers.[i]
-        if matcher.indices.Length <> 1 then
+        if matcher.Indices.Length <> 1 then
           failwithf "Matcher indices length not = 1 %s" (matchers.[i].ToString())
-        indices.[i] <- matcher.indices.[0]
+        indices.[i] <- matcher.Indices.[0]
       indices
 
     (** 
@@ -140,18 +159,30 @@ namespace Entitas
      *)
     override this.ToString() =
       if toStringCache = "" then
+
         let sb = new StringBuilder()
-        if allOfIndices.Length = 0 then
-          sb.Append("AllOf") |> ignore
-          sb.Append(allOfIndices.ToString()) |> ignore
+        if _allOfIndices.Length > 0 then
+          sb.Append("AllOf(") |> ignore
+          for i=0 to _allOfIndices.Length-1 do
+            sb.Append(_allOfIndices.[i].ToString()) |> ignore
+            if i < _allOfIndices.Length-1 then sb.Append(",") |> ignore
+          sb.Append(")") |> ignore
 
-        if anyOfIndices.Length = 0 then
-          sb.Append("AnyOf") |> ignore
-          sb.Append(anyOfIndices.ToString()) |> ignore
+        if _anyOfIndices.Length > 0 then
+          sb.Append("AnyOf(") |> ignore
+          for i=0 to _anyOfIndices.Length-1 do
+            sb.Append(_anyOfIndices.[i].ToString()) |> ignore
+            if i < _anyOfIndices.Length-1 then sb.Append(",") |> ignore
+          sb.Append(")") |> ignore
 
-        if noneOfIndices.Length = 0 then
-          sb.Append("NoneOf") |> ignore
-          sb.Append(noneOfIndices.ToString()) |> ignore
+        if _noneOfIndices.Length > 0 then
+          sb.Append("NoneOf(") |> ignore
+          for i=0 to _noneOfIndices.Length-1 do
+            sb.Append(_noneOfIndices.[i].ToString()) |> ignore
+            if i < _noneOfIndices.Length-1 then sb.Append(",") |> ignore
+          sb.Append(")") |> ignore
+
+        toStringCache <- sb.ToString()
 
       toStringCache
 
@@ -193,7 +224,9 @@ namespace Entitas
     member val OnEntityRemoved            = onEntityRemoved.Publish with get
     member val OnEntityUpdated            = onEntityUpdated.Publish with get
     member val matcher                    = matcher with get
-    member val count                      = entities.Count with get
+
+    member this.count                     
+      with get() = entities.Count
 
     (** 
      * HandleEntitySilently
@@ -338,7 +371,7 @@ namespace Entitas
      *
      * @param system
      *)
-    member this.Add(system:ASystem) =
+    member this.Add(system:Object) =
       match system with 
       | :? IInitializeSystem as initializeSystem ->
         _initializeSystems.Add(initializeSystem)
@@ -408,6 +441,24 @@ namespace Entitas
     inherit AEntity()
 
     let isNull x = match x with null -> true | _ -> false
+    let nonNull x = match x with null -> false | _ -> true
+
+    (**
+     * Component Active Pattern  
+     * parse component class name
+     *)
+    let (|Component|) (s:string) =
+        let s0 = s.Split([|'+'|])
+        let s1 = s0.[1]
+        if s1.EndsWith("Component") then
+            s1.Substring(0,s1.LastIndexOf("Component"))
+        else
+            s1
+
+    (** parse component class name **)
+    let parsec s =
+        match s with 
+        | Component (c) -> c
 
     let onComponentAdded                  = new Event<ComponentAddedDelegate, ComponentAddedArgs>()
     let onComponentRemoved                = new Event<ComponentRemovedDelegate, ComponentRemovedArgs>()
@@ -418,7 +469,6 @@ namespace Entitas
     let mutable componentsCache           = Array.empty<Component> //new ResizeArray<Component>()
     let mutable toStringCache             = "" 
 
-    member val retainCount                = owners.Count with get
     member val OnComponentAdded           = onComponentAdded.Publish with get
     member val OnComponentRemoved         = onComponentRemoved.Publish with get
     member val OnComponentReplaced        = onComponentReplaced.Publish with get
@@ -426,7 +476,10 @@ namespace Entitas
 
     override val Id                       = 0 with get, set
     override val IsEnabled                = false with get, set
-         
+
+    member this.retainCount                
+      with get() = owners.Count
+             
      (** 
      * AddComponent 
      *
@@ -506,13 +559,11 @@ namespace Entitas
      * @returns true if entity has all components in array
      *)
     override this.HasComponents(indices:int[]) =
-      let mutable i = 0
       let mutable flag = true
 
-      while (flag && i<indices.Length) do
-        if isNull(components.[indices.[i]]) then
+      for index in indices do
+        if isNull(components.[index]) then
           flag <- false
-        i <- i+1
       flag
 
     (** 
@@ -522,13 +573,11 @@ namespace Entitas
      * @returns true if entity has any component in array
      *)
     override this.HasAnyComponent(indices:int[]) =
-      let mutable i = 0
       let mutable flag = false
 
-      while (flag && i<indices.Length) do
-        if not(isNull(components.[indices.[i]])) then
+      for index in indices do
+        if not(isNull(components.[index])) then
           flag <- true
-        i <- i+1
       flag
 
     (** 
@@ -576,10 +625,10 @@ namespace Entitas
         sb.Append(this.retainCount.ToString()) |> ignore
         sb.Append(")") |> ignore
         sb.Append("(") |> ignore
-        for i = 0 to components.Length-1 do
-          if not(isNull(components.[i])) then
-              sb.Append(components.[i].GetType().ToString()) |> ignore
-              if i < components.Length-1 then sb.Append(",") |> ignore
+        let c = Array.filter nonNull components
+        for i = 0 to c.Length-1 do
+          sb.Append(parsec(c.[i].GetType().ToString())) |> ignore
+          if i < c.Length-1 then sb.Append(",") |> ignore
         sb.Append(")") |> ignore
         toStringCache <- sb.ToString()
 
@@ -657,10 +706,15 @@ namespace Entitas
     member val OnEntityDestroyed          = onEntityDestroyed.Publish with get
     member val OnGroupCreated             = onGroupCreated.Publish with get
     member val OnGroupCleared             = onGroupCleared.Publish with get
-    member val totalComponents            = totalComponents with get
-    member val count                      = entities.Count with get
-    member val reusableEntitiesCount      = reusableEntities.Count with get
-    member val retainedEntitiesCount      = retainedEntities.Count with get
+
+    member this.totalComponents 
+      with get() = totalComponents 
+    member this.count 
+      with get() = entities.Count
+    member this.reusableEntitiesCount      
+      with get() = reusableEntities.Count
+    member this.retainedEntitiesCount      
+      with get() = retainedEntities.Count
 
     (** 
      * CreateEntity
@@ -751,7 +805,7 @@ namespace Entitas
         for entity in this.GetEntities() do
           group.HandleEntitySilently(entity) |> ignore
         groups.Add(matcher.ToString(), group) |> ignore
-        for index in matcher.indices do
+        for index in matcher.Indices do
           if (isNull(groupsForIndex.[index])) then
             groupsForIndex.[index] <- new ResizeArray<Group>()
           groupsForIndex.[index].Add(group)
@@ -786,8 +840,10 @@ namespace Entitas
      *)
     member this.updateGroupsComponentAdded =
       new ComponentAddedDelegate(fun sender evt ->
-        let entity = evt.entity:?>Entity
-        printf "hello"
+        let groups = groupsForIndex.[evt.index]
+        if not(isNull(groups)) then
+          for group in groups do
+            group.HandleEntity(evt.entity, evt.index, evt.newComponent)
       )
 
     (** 
@@ -796,8 +852,10 @@ namespace Entitas
      *)
     member this.updateGroupsComponentRemoved =
       new ComponentRemovedDelegate(fun sender evt ->
-        let entity = evt.entity:?>Entity
-        printf "hello"
+        let groups = groupsForIndex.[evt.index]
+        if not(isNull(groups)) then
+          for group in groups do
+            group.HandleEntity(evt.entity, evt.index, evt.previous)
       )
 
     (** 

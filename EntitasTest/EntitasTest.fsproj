@@ -40,5 +40,9 @@
       <Project>{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}</Project>
       <Name>Entitas</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ShmupWarz\ShmupWarz.fsproj">
+      <Project>{CF905500-CBB1-4B67-8566-62265356CEED}</Project>
+      <Name>ShmupWarz</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

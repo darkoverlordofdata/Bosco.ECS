@@ -31,6 +31,10 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Entitas.fs" />
+    <Compile Include="Entity.fs" />
+    <Compile Include="Matcher.fs" />
+    <Compile Include="Group.fs" />
+    <Compile Include="World.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ProjectExtensions>

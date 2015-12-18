@@ -1,41 +1,42 @@
 module ShmupWarzExtensions
 
 open Entitas
+open ShmupWarz
 open System
 open System.Collections.Generic
 open Microsoft.FSharp.Reflection
 
 let isNull x = match x with null -> true | _ -> false
 
-type ComponentIds = 
-  | BoundsComponent = 1
-  | BulletComponent = 2
-  | ColorAnimationComponent = 3
-  | EnemyComponent = 4
-  | ExpiresComponent = 5
-  | FiringComponent = 6
-  | HealthComponent = 7
-  | ParallaxStarComponent = 8
-  | PlayerComponent = 9
-  | PositionComponent = 10
-  | ScaleAnimationComponent = 11
-  | SoundEffectComponent = 12
-  | SpriteComponent = 13
-  | VelocityComponent = 14
-  | ScoreComponent = 15
-  | DestroyComponent = 16
-  | MouseComponent = 17
-  | ScaleComponent = 18
-  | ResourceComponent = 19
-  | LayerComponent = 20
-  | BackgroundComponent = 21
-  | MineComponent = 22
-  | StatusComponent = 23
-  | LifeComponent = 24
+type ComponentId = 
+  | Bounds = 1
+  | Bullet = 2
+  | ColorAnimation = 3
+  | Enemy = 4
+  | Expires = 5
+  | Firing = 6
+  | Health = 7
+  | ParallaxStar = 8
+  | Player = 9
+  | Position = 10
+  | ScaleAnimation = 11
+  | SoundEffect = 12
+  | Sprite = 13
+  | Velocity = 14
+  | Score = 15
+  | Destroy = 16
+  | Mouse = 17
+  | Scale = 18
+  | Resource = 19
+  | Layer = 20
+  | Background = 21
+  | Mine = 22
+  | Status = 23
+  | Life = 24
+  | TotalComponents = 25
 
 type Entity with
     member this.bounds
-
         with get() = this.GetComponent(int ComponentId.Bounds):?>BoundsComponent
 
     member this.hasBounds
@@ -52,16 +53,16 @@ type Entity with
           match this._boundsComponentPool.Count with
           | 0 -> new BoundsComponent()
           | _ -> this._boundsComponentPool.Pop()
-        c.radius = radius;
+        c.radius <- radius;
         this.AddComponent(int ComponentId.Bounds, c)
 
     member this.ReplaceBounds(radius) =
-        let previousComponent = if this.hasbounds then this.bounds else null
+        let previousComponent = if this.hasBounds then this.bounds else null
         let mutable c = 
           match this._boundsComponentPool.Count with
           | 0 -> new BoundsComponent()
           | _ -> this._boundsComponentPool.Pop()
-        c.radius = radius;
+        c.radius <- radius;
         this.ReplaceComponent(int ComponentId.Bounds, c) |> ignore
         if not(isNull(previousComponent)) then
             this._boundsComponentPool.Push(previousComponent)
@@ -97,7 +98,6 @@ type Matcher with
 
 type Entity with
     member this.colorAnimation
-
         with get() = this.GetComponent(int ComponentId.ColorAnimation):?>ColorAnimationComponent
 
     member this.hasColorAnimation
@@ -114,48 +114,48 @@ type Entity with
           match this._colorAnimationComponentPool.Count with
           | 0 -> new ColorAnimationComponent()
           | _ -> this._colorAnimationComponentPool.Pop()
-        c.redMin = redMin;
-        c.redMax = redMax;
-        c.redSpeed = redSpeed;
-        c.greenMin = greenMin;
-        c.greenMax = greenMax;
-        c.greenSpeed = greenSpeed;
-        c.blueMin = blueMin;
-        c.blueMax = blueMax;
-        c.blueSpeed = blueSpeed;
-        c.alphaMin = alphaMin;
-        c.alphaMax = alphaMax;
-        c.alphaSpeed = alphaSpeed;
-        c.redAnimate = redAnimate;
-        c.greenAnimate = greenAnimate;
-        c.blueAnimate = blueAnimate;
-        c.alphaAnimate = alphaAnimate;
-        c.repeat = repeat;
+        c.redMin <- redMin;
+        c.redMax <- redMax;
+        c.redSpeed <- redSpeed;
+        c.greenMin <- greenMin;
+        c.greenMax <- greenMax;
+        c.greenSpeed <- greenSpeed;
+        c.blueMin <- blueMin;
+        c.blueMax <- blueMax;
+        c.blueSpeed <- blueSpeed;
+        c.alphaMin <- alphaMin;
+        c.alphaMax <- alphaMax;
+        c.alphaSpeed <- alphaSpeed;
+        c.redAnimate <- redAnimate;
+        c.greenAnimate <- greenAnimate;
+        c.blueAnimate <- blueAnimate;
+        c.alphaAnimate <- alphaAnimate;
+        c.repeat <- repeat;
         this.AddComponent(int ComponentId.ColorAnimation, c)
 
     member this.ReplaceColorAnimation(redMin, redMax, redSpeed, greenMin, greenMax, greenSpeed, blueMin, blueMax, blueSpeed, alphaMin, alphaMax, alphaSpeed, redAnimate, greenAnimate, blueAnimate, alphaAnimate, repeat) =
-        let previousComponent = if this.hascolorAnimation then this.colorAnimation else null
+        let previousComponent = if this.hasColorAnimation then this.colorAnimation else null
         let mutable c = 
           match this._colorAnimationComponentPool.Count with
           | 0 -> new ColorAnimationComponent()
           | _ -> this._colorAnimationComponentPool.Pop()
-        c.redMin = redMin;
-        c.redMax = redMax;
-        c.redSpeed = redSpeed;
-        c.greenMin = greenMin;
-        c.greenMax = greenMax;
-        c.greenSpeed = greenSpeed;
-        c.blueMin = blueMin;
-        c.blueMax = blueMax;
-        c.blueSpeed = blueSpeed;
-        c.alphaMin = alphaMin;
-        c.alphaMax = alphaMax;
-        c.alphaSpeed = alphaSpeed;
-        c.redAnimate = redAnimate;
-        c.greenAnimate = greenAnimate;
-        c.blueAnimate = blueAnimate;
-        c.alphaAnimate = alphaAnimate;
-        c.repeat = repeat;
+        c.redMin <- redMin;
+        c.redMax <- redMax;
+        c.redSpeed <- redSpeed;
+        c.greenMin <- greenMin;
+        c.greenMax <- greenMax;
+        c.greenSpeed <- greenSpeed;
+        c.blueMin <- blueMin;
+        c.blueMax <- blueMax;
+        c.blueSpeed <- blueSpeed;
+        c.alphaMin <- alphaMin;
+        c.alphaMax <- alphaMax;
+        c.alphaSpeed <- alphaSpeed;
+        c.redAnimate <- redAnimate;
+        c.greenAnimate <- greenAnimate;
+        c.blueAnimate <- blueAnimate;
+        c.alphaAnimate <- alphaAnimate;
+        c.repeat <- repeat;
         this.ReplaceComponent(int ComponentId.ColorAnimation, c) |> ignore
         if not(isNull(previousComponent)) then
             this._colorAnimationComponentPool.Push(previousComponent)
@@ -191,7 +191,6 @@ type Matcher with
 
 type Entity with
     member this.expires
-
         with get() = this.GetComponent(int ComponentId.Expires):?>ExpiresComponent
 
     member this.hasExpires
@@ -208,16 +207,16 @@ type Entity with
           match this._expiresComponentPool.Count with
           | 0 -> new ExpiresComponent()
           | _ -> this._expiresComponentPool.Pop()
-        c.delay = delay;
+        c.delay <- delay;
         this.AddComponent(int ComponentId.Expires, c)
 
     member this.ReplaceExpires(delay) =
-        let previousComponent = if this.hasexpires then this.expires else null
+        let previousComponent = if this.hasExpires then this.expires else null
         let mutable c = 
           match this._expiresComponentPool.Count with
           | 0 -> new ExpiresComponent()
           | _ -> this._expiresComponentPool.Pop()
-        c.delay = delay;
+        c.delay <- delay;
         this.ReplaceComponent(int ComponentId.Expires, c) |> ignore
         if not(isNull(previousComponent)) then
             this._expiresComponentPool.Push(previousComponent)
@@ -253,7 +252,6 @@ type Matcher with
 
 type Entity with
     member this.health
-
         with get() = this.GetComponent(int ComponentId.Health):?>HealthComponent
 
     member this.hasHealth
@@ -270,18 +268,18 @@ type Entity with
           match this._healthComponentPool.Count with
           | 0 -> new HealthComponent()
           | _ -> this._healthComponentPool.Pop()
-        c.health = health;
-        c.maximumHealth = maximumHealth;
+        c.health <- health;
+        c.maximumHealth <- maximumHealth;
         this.AddComponent(int ComponentId.Health, c)
 
     member this.ReplaceHealth(health, maximumHealth) =
-        let previousComponent = if this.hashealth then this.health else null
+        let previousComponent = if this.hasHealth then this.health else null
         let mutable c = 
           match this._healthComponentPool.Count with
           | 0 -> new HealthComponent()
           | _ -> this._healthComponentPool.Pop()
-        c.health = health;
-        c.maximumHealth = maximumHealth;
+        c.health <- health;
+        c.maximumHealth <- maximumHealth;
         this.ReplaceComponent(int ComponentId.Health, c) |> ignore
         if not(isNull(previousComponent)) then
             this._healthComponentPool.Push(previousComponent)
@@ -337,7 +335,6 @@ type Matcher with
 
 type Entity with
     member this.position
-
         with get() = this.GetComponent(int ComponentId.Position):?>PositionComponent
 
     member this.hasPosition
@@ -354,18 +351,18 @@ type Entity with
           match this._positionComponentPool.Count with
           | 0 -> new PositionComponent()
           | _ -> this._positionComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.AddComponent(int ComponentId.Position, c)
 
     member this.ReplacePosition(x, y) =
-        let previousComponent = if this.hasposition then this.position else null
+        let previousComponent = if this.hasPosition then this.position else null
         let mutable c = 
           match this._positionComponentPool.Count with
           | 0 -> new PositionComponent()
           | _ -> this._positionComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.ReplaceComponent(int ComponentId.Position, c) |> ignore
         if not(isNull(previousComponent)) then
             this._positionComponentPool.Push(previousComponent)
@@ -381,7 +378,6 @@ type Matcher with
 
 type Entity with
     member this.scaleAnimation
-
         with get() = this.GetComponent(int ComponentId.ScaleAnimation):?>ScaleAnimationComponent
 
     member this.hasScaleAnimation
@@ -398,24 +394,24 @@ type Entity with
           match this._scaleAnimationComponentPool.Count with
           | 0 -> new ScaleAnimationComponent()
           | _ -> this._scaleAnimationComponentPool.Pop()
-        c.min = min;
-        c.max = max;
-        c.speed = speed;
-        c.repeat = repeat;
-        c.active = active;
+        c.min <- min;
+        c.max <- max;
+        c.speed <- speed;
+        c.repeat <- repeat;
+        c.active <- active;
         this.AddComponent(int ComponentId.ScaleAnimation, c)
 
     member this.ReplaceScaleAnimation(min, max, speed, repeat, active) =
-        let previousComponent = if this.hasscaleAnimation then this.scaleAnimation else null
+        let previousComponent = if this.hasScaleAnimation then this.scaleAnimation else null
         let mutable c = 
           match this._scaleAnimationComponentPool.Count with
           | 0 -> new ScaleAnimationComponent()
           | _ -> this._scaleAnimationComponentPool.Pop()
-        c.min = min;
-        c.max = max;
-        c.speed = speed;
-        c.repeat = repeat;
-        c.active = active;
+        c.min <- min;
+        c.max <- max;
+        c.speed <- speed;
+        c.repeat <- repeat;
+        c.active <- active;
         this.ReplaceComponent(int ComponentId.ScaleAnimation, c) |> ignore
         if not(isNull(previousComponent)) then
             this._scaleAnimationComponentPool.Push(previousComponent)
@@ -431,7 +427,6 @@ type Matcher with
 
 type Entity with
     member this.soundEffect
-
         with get() = this.GetComponent(int ComponentId.SoundEffect):?>SoundEffectComponent
 
     member this.hasSoundEffect
@@ -448,16 +443,16 @@ type Entity with
           match this._soundEffectComponentPool.Count with
           | 0 -> new SoundEffectComponent()
           | _ -> this._soundEffectComponentPool.Pop()
-        c.effect = effect;
+        c.effect <- effect;
         this.AddComponent(int ComponentId.SoundEffect, c)
 
     member this.ReplaceSoundEffect(effect) =
-        let previousComponent = if this.hassoundEffect then this.soundEffect else null
+        let previousComponent = if this.hasSoundEffect then this.soundEffect else null
         let mutable c = 
           match this._soundEffectComponentPool.Count with
           | 0 -> new SoundEffectComponent()
           | _ -> this._soundEffectComponentPool.Pop()
-        c.effect = effect;
+        c.effect <- effect;
         this.ReplaceComponent(int ComponentId.SoundEffect, c) |> ignore
         if not(isNull(previousComponent)) then
             this._soundEffectComponentPool.Push(previousComponent)
@@ -473,7 +468,6 @@ type Matcher with
 
 type Entity with
     member this.sprite
-
         with get() = this.GetComponent(int ComponentId.Sprite):?>SpriteComponent
 
     member this.hasSprite
@@ -485,23 +479,23 @@ type Entity with
     member this.ClearSpriteComponentPool() =
         this._spriteComponentPool.Clear()
 
-    member this.AddSprite(layer, object) =
+    member this.AddSprite(layer, gameObject) =
         let mutable c = 
           match this._spriteComponentPool.Count with
           | 0 -> new SpriteComponent()
           | _ -> this._spriteComponentPool.Pop()
-        c.layer = layer;
-        c.object = object;
+        c.layer <- layer;
+        c.gameObject <- gameObject;
         this.AddComponent(int ComponentId.Sprite, c)
 
-    member this.ReplaceSprite(layer, object) =
-        let previousComponent = if this.hassprite then this.sprite else null
+    member this.ReplaceSprite(layer, gameObject) =
+        let previousComponent = if this.hasSprite then this.sprite else null
         let mutable c = 
           match this._spriteComponentPool.Count with
           | 0 -> new SpriteComponent()
           | _ -> this._spriteComponentPool.Pop()
-        c.layer = layer;
-        c.object = object;
+        c.layer <- layer;
+        c.gameObject <- gameObject;
         this.ReplaceComponent(int ComponentId.Sprite, c) |> ignore
         if not(isNull(previousComponent)) then
             this._spriteComponentPool.Push(previousComponent)
@@ -517,7 +511,6 @@ type Matcher with
 
 type Entity with
     member this.velocity
-
         with get() = this.GetComponent(int ComponentId.Velocity):?>VelocityComponent
 
     member this.hasVelocity
@@ -534,18 +527,18 @@ type Entity with
           match this._velocityComponentPool.Count with
           | 0 -> new VelocityComponent()
           | _ -> this._velocityComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.AddComponent(int ComponentId.Velocity, c)
 
     member this.ReplaceVelocity(x, y) =
-        let previousComponent = if this.hasvelocity then this.velocity else null
+        let previousComponent = if this.hasVelocity then this.velocity else null
         let mutable c = 
           match this._velocityComponentPool.Count with
           | 0 -> new VelocityComponent()
           | _ -> this._velocityComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.ReplaceComponent(int ComponentId.Velocity, c) |> ignore
         if not(isNull(previousComponent)) then
             this._velocityComponentPool.Push(previousComponent)
@@ -561,7 +554,6 @@ type Matcher with
 
 type Entity with
     member this.score
-
         with get() = this.GetComponent(int ComponentId.Score):?>ScoreComponent
 
     member this.hasScore
@@ -578,16 +570,16 @@ type Entity with
           match this._scoreComponentPool.Count with
           | 0 -> new ScoreComponent()
           | _ -> this._scoreComponentPool.Pop()
-        c.value = value;
+        c.value <- value;
         this.AddComponent(int ComponentId.Score, c)
 
     member this.ReplaceScore(value) =
-        let previousComponent = if this.hasscore then this.score else null
+        let previousComponent = if this.hasScore then this.score else null
         let mutable c = 
           match this._scoreComponentPool.Count with
           | 0 -> new ScoreComponent()
           | _ -> this._scoreComponentPool.Pop()
-        c.value = value;
+        c.value <- value;
         this.ReplaceComponent(int ComponentId.Score, c) |> ignore
         if not(isNull(previousComponent)) then
             this._scoreComponentPool.Push(previousComponent)
@@ -623,7 +615,6 @@ type Matcher with
 
 type Entity with
     member this.mouse
-
         with get() = this.GetComponent(int ComponentId.Mouse):?>MouseComponent
 
     member this.hasMouse
@@ -640,18 +631,18 @@ type Entity with
           match this._mouseComponentPool.Count with
           | 0 -> new MouseComponent()
           | _ -> this._mouseComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.AddComponent(int ComponentId.Mouse, c)
 
     member this.ReplaceMouse(x, y) =
-        let previousComponent = if this.hasmouse then this.mouse else null
+        let previousComponent = if this.hasMouse then this.mouse else null
         let mutable c = 
           match this._mouseComponentPool.Count with
           | 0 -> new MouseComponent()
           | _ -> this._mouseComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.ReplaceComponent(int ComponentId.Mouse, c) |> ignore
         if not(isNull(previousComponent)) then
             this._mouseComponentPool.Push(previousComponent)
@@ -667,7 +658,6 @@ type Matcher with
 
 type Entity with
     member this.scale
-
         with get() = this.GetComponent(int ComponentId.Scale):?>ScaleComponent
 
     member this.hasScale
@@ -684,18 +674,18 @@ type Entity with
           match this._scaleComponentPool.Count with
           | 0 -> new ScaleComponent()
           | _ -> this._scaleComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.AddComponent(int ComponentId.Scale, c)
 
     member this.ReplaceScale(x, y) =
-        let previousComponent = if this.hasscale then this.scale else null
+        let previousComponent = if this.hasScale then this.scale else null
         let mutable c = 
           match this._scaleComponentPool.Count with
           | 0 -> new ScaleComponent()
           | _ -> this._scaleComponentPool.Pop()
-        c.x = x;
-        c.y = y;
+        c.x <- x;
+        c.y <- y;
         this.ReplaceComponent(int ComponentId.Scale, c) |> ignore
         if not(isNull(previousComponent)) then
             this._scaleComponentPool.Push(previousComponent)
@@ -711,7 +701,6 @@ type Matcher with
 
 type Entity with
     member this.resource
-
         with get() = this.GetComponent(int ComponentId.Resource):?>ResourceComponent
 
     member this.hasResource
@@ -728,16 +717,16 @@ type Entity with
           match this._resourceComponentPool.Count with
           | 0 -> new ResourceComponent()
           | _ -> this._resourceComponentPool.Pop()
-        c.name = name;
+        c.name <- name;
         this.AddComponent(int ComponentId.Resource, c)
 
     member this.ReplaceResource(name) =
-        let previousComponent = if this.hasresource then this.resource else null
+        let previousComponent = if this.hasResource then this.resource else null
         let mutable c = 
           match this._resourceComponentPool.Count with
           | 0 -> new ResourceComponent()
           | _ -> this._resourceComponentPool.Pop()
-        c.name = name;
+        c.name <- name;
         this.ReplaceComponent(int ComponentId.Resource, c) |> ignore
         if not(isNull(previousComponent)) then
             this._resourceComponentPool.Push(previousComponent)
@@ -753,7 +742,6 @@ type Matcher with
 
 type Entity with
     member this.layer
-
         with get() = this.GetComponent(int ComponentId.Layer):?>LayerComponent
 
     member this.hasLayer
@@ -770,16 +758,16 @@ type Entity with
           match this._layerComponentPool.Count with
           | 0 -> new LayerComponent()
           | _ -> this._layerComponentPool.Pop()
-        c.ordinal = ordinal;
+        c.ordinal <- ordinal;
         this.AddComponent(int ComponentId.Layer, c)
 
     member this.ReplaceLayer(ordinal) =
-        let previousComponent = if this.haslayer then this.layer else null
+        let previousComponent = if this.hasLayer then this.layer else null
         let mutable c = 
           match this._layerComponentPool.Count with
           | 0 -> new LayerComponent()
           | _ -> this._layerComponentPool.Pop()
-        c.ordinal = ordinal;
+        c.ordinal <- ordinal;
         this.ReplaceComponent(int ComponentId.Layer, c) |> ignore
         if not(isNull(previousComponent)) then
             this._layerComponentPool.Push(previousComponent)
@@ -795,7 +783,6 @@ type Matcher with
 
 type Entity with
     member this.background
-
         with get() = this.GetComponent(int ComponentId.Background):?>BackgroundComponent
 
     member this.hasBackground
@@ -812,16 +799,16 @@ type Entity with
           match this._backgroundComponentPool.Count with
           | 0 -> new BackgroundComponent()
           | _ -> this._backgroundComponentPool.Pop()
-        c.filter = filter;
+        c.filter <- filter;
         this.AddComponent(int ComponentId.Background, c)
 
     member this.ReplaceBackground(filter) =
-        let previousComponent = if this.hasbackground then this.background else null
+        let previousComponent = if this.hasBackground then this.background else null
         let mutable c = 
           match this._backgroundComponentPool.Count with
           | 0 -> new BackgroundComponent()
           | _ -> this._backgroundComponentPool.Pop()
-        c.filter = filter;
+        c.filter <- filter;
         this.ReplaceComponent(int ComponentId.Background, c) |> ignore
         if not(isNull(previousComponent)) then
             this._backgroundComponentPool.Push(previousComponent)
@@ -857,7 +844,6 @@ type Matcher with
 
 type Entity with
     member this.status
-
         with get() = this.GetComponent(int ComponentId.Status):?>StatusComponent
 
     member this.hasStatus
@@ -874,18 +860,18 @@ type Entity with
           match this._statusComponentPool.Count with
           | 0 -> new StatusComponent()
           | _ -> this._statusComponentPool.Pop()
-        c.percent = percent;
-        c.immunity = immunity;
+        c.percent <- percent;
+        c.immunity <- immunity;
         this.AddComponent(int ComponentId.Status, c)
 
     member this.ReplaceStatus(percent, immunity) =
-        let previousComponent = if this.hasstatus then this.status else null
+        let previousComponent = if this.hasStatus then this.status else null
         let mutable c = 
           match this._statusComponentPool.Count with
           | 0 -> new StatusComponent()
           | _ -> this._statusComponentPool.Pop()
-        c.percent = percent;
-        c.immunity = immunity;
+        c.percent <- percent;
+        c.immunity <- immunity;
         this.ReplaceComponent(int ComponentId.Status, c) |> ignore
         if not(isNull(previousComponent)) then
             this._statusComponentPool.Push(previousComponent)
@@ -901,7 +887,6 @@ type Matcher with
 
 type Entity with
     member this.life
-
         with get() = this.GetComponent(int ComponentId.Life):?>LifeComponent
 
     member this.hasLife
@@ -918,16 +903,16 @@ type Entity with
           match this._lifeComponentPool.Count with
           | 0 -> new LifeComponent()
           | _ -> this._lifeComponentPool.Pop()
-        c.count = count;
+        c.count <- count;
         this.AddComponent(int ComponentId.Life, c)
 
     member this.ReplaceLife(count) =
-        let previousComponent = if this.haslife then this.life else null
+        let previousComponent = if this.hasLife then this.life else null
         let mutable c = 
           match this._lifeComponentPool.Count with
           | 0 -> new LifeComponent()
           | _ -> this._lifeComponentPool.Pop()
-        c.count = count;
+        c.count <- count;
         this.ReplaceComponent(int ComponentId.Life, c) |> ignore
         if not(isNull(previousComponent)) then
             this._lifeComponentPool.Push(previousComponent)

@@ -7,16 +7,11 @@ namespace Entitas
   [<AbstractClass>][<AllowNullLiteral>]
   type ASystem() = class end
 
-  //[<AbstractClass>]
   type IInitializeSystem =
-    //inherit ASystem()
     abstract member Initialize: unit -> unit
 
-  //[<AbstractClass>]
   type IExecuteSystem =
-    //inherit ASystem()
     abstract member Execute: unit -> unit
-
 
   [<AbstractClass>][<AllowNullLiteral>]
   type Component() = class end
@@ -38,9 +33,9 @@ namespace Entitas
     abstract member Retain: Object -> unit
     abstract member Release: Object -> unit
 
-
   (** 
    * Matcher
+   * matchers can match an entity by components used
    *)
   type Matcher () =
     static let mutable uniqueId           = 0
@@ -55,15 +50,15 @@ namespace Entitas
 
     member this.Id
       with get() = _id
-    member this.Indices
+    member internal this.Indices
       with get() = _indices
-    member this.AllOfIndices
+    member internal this.AllOfIndices
       with get() =_allOfIndices
       and  set(value) = _allOfIndices <- value
-    member this.AnyOfIndices
+    member internal this.AnyOfIndices
       with get() = _anyOfIndices
       and  set(value) = _anyOfIndices <- value
-    member this.NoneOfIndices
+    member internal this.NoneOfIndices
       with get() = _noneOfIndices
       and  set(value) = _noneOfIndices <- value
 
@@ -185,6 +180,7 @@ namespace Entitas
         toStringCache <- sb.ToString()
 
       toStringCache
+
 
   (** 
    * Group Events
@@ -359,48 +355,6 @@ namespace Entitas
 
 
   (** 
-   * Systems
-   *)
-  type Systems () =
-
-    let _initializeSystems = new ResizeArray<IInitializeSystem>()
-    let _executeSystems = new ResizeArray<IExecuteSystem>()
-
-    (** 
-     * Add 
-     *
-     * @param system
-     *)
-    member this.Add(system:Object) =
-      match system with 
-      | :? IInitializeSystem as initializeSystem ->
-        _initializeSystems.Add(initializeSystem)
-      | _ -> ignore()
-
-      match system with 
-      | :? IExecuteSystem as executeSystem ->
-        _executeSystems.Add(executeSystem)
-      | _ -> ignore()
-
-
-    (** 
-     * Initialize 
-     *
-     *)
-    member this.Initialize() =
-      for system in _initializeSystems do
-        system.Initialize()
-    
-    (** 
-     * Execute
-     *
-     *)
-    member this.Execute() =
-      for system in _executeSystems do
-        system.Execute()
-
-
-  (** 
    * Entity Events
    *)
   type EntityReleasedArgs(entity:AEntity) =
@@ -437,6 +391,7 @@ namespace Entitas
   (** 
    * Entity
    *)
+  [<AllowNullLiteral>]
   type Entity (totalComponents:int) =
     inherit AEntity()
 
@@ -695,11 +650,13 @@ namespace Entitas
     let onGroupCleared                    = new Event<GroupClearedDelegate, GroupEventArgs>()
     let entities                          = new HashSet<Entity>()
     let groups                            = new Dictionary<string,Group>()
-    let groupsForIndex                    = (Array.zeroCreate totalComponents)
+    let groupsForIndex                    = (Array.zeroCreate (totalComponents+1))
     let reusableEntities                  = new Stack<AEntity>()
     let retainedEntities                  = new HashSet<AEntity>()
     let mutable creationIndex             = 0
     let mutable entitiesCache             = (Array.zeroCreate 0)
+    let initializeSystems                 = new ResizeArray<IInitializeSystem>()
+    let executeSystems                    = new ResizeArray<IExecuteSystem>()
 
     member val OnEntityCreated            = onEntityCreated.Publish with get
     member val OnEntityWillBeDestroyed    = onEntityWillBeDestroyed.Publish with get
@@ -724,7 +681,7 @@ namespace Entitas
     member this.CreateEntity() =
       let mutable entity = 
         match reusableEntities.Count with
-        | 0 -> new Entity(totalComponents)
+        | 0 -> new Entity(totalComponents+1)
         | _ -> reusableEntities.Pop():?>Entity
       
       entity.IsEnabled <- true
@@ -885,4 +842,37 @@ namespace Entitas
         retainedEntities.Remove(entity) |> ignore
         reusableEntities.Push(entity)
       )
+
+    (** 
+     * Add 
+     *
+     * @param system
+     *)
+    member this.Add(system:Object) =
+      match system with 
+      | :? IInitializeSystem as initializeSystem ->
+        initializeSystems.Add(initializeSystem)
+      | _ -> ignore()
+
+      match system with 
+      | :? IExecuteSystem as executeSystem ->
+        executeSystems.Add(executeSystem)
+      | _ -> ignore()
+
+
+    (** 
+     * Initialize 
+     *
+     *)
+    member this.Initialize() =
+      for system in initializeSystems do
+        system.Initialize()
+    
+    (** 
+     * Execute
+     *
+     *)
+    member this.Execute() =
+      for system in executeSystems do
+        system.Execute()
 

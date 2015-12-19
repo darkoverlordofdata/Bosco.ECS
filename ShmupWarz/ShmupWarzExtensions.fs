@@ -12,6 +12,7 @@ open System
 open System.Collections.Generic
 
 let isNull x = match x with null -> true | _ -> false
+let notNull x = match x with null -> false | _ -> true
 
 type Component with 
     static member Bounds with get() = 1
@@ -378,16 +379,17 @@ type Entity with
     member this.ClearPositionComponentPool() =
         this._positionComponentPool.Clear()
 
-    member this.AddPosition(x, y) =
+    member this.AddPosition(x, y, z) =
         let mutable c = 
           match this._positionComponentPool.Count with
           | 0 -> new PositionComponent()
           | _ -> this._positionComponentPool.Pop()
         c.x <- x;
         c.y <- y;
+        c.z <- z;
         this.AddComponent(Component.Position, c)
 
-    member this.ReplacePosition(x, y) =
+    member this.ReplacePosition(x, y, z) =
         let previousComponent = if this.hasPosition then this.position else null
         let mutable c = 
           match this._positionComponentPool.Count with
@@ -395,6 +397,7 @@ type Entity with
           | _ -> this._positionComponentPool.Pop()
         c.x <- x;
         c.y <- y;
+        c.z <- z;
         this.ReplaceComponent(Component.Position, c) |> ignore
         if not(isNull(previousComponent)) then
             this._positionComponentPool.Push(previousComponent)
@@ -554,16 +557,17 @@ type Entity with
     member this.ClearVelocityComponentPool() =
         this._velocityComponentPool.Clear()
 
-    member this.AddVelocity(x, y) =
+    member this.AddVelocity(x, y, z) =
         let mutable c = 
           match this._velocityComponentPool.Count with
           | 0 -> new VelocityComponent()
           | _ -> this._velocityComponentPool.Pop()
         c.x <- x;
         c.y <- y;
+        c.z <- z;
         this.AddComponent(Component.Velocity, c)
 
-    member this.ReplaceVelocity(x, y) =
+    member this.ReplaceVelocity(x, y, z) =
         let previousComponent = if this.hasVelocity then this.velocity else null
         let mutable c = 
           match this._velocityComponentPool.Count with
@@ -571,6 +575,7 @@ type Entity with
           | _ -> this._velocityComponentPool.Pop()
         c.x <- x;
         c.y <- y;
+        c.z <- z;
         this.ReplaceComponent(Component.Velocity, c) |> ignore
         if not(isNull(previousComponent)) then
             this._velocityComponentPool.Push(previousComponent)
@@ -957,3 +962,118 @@ type Entity with
 
 type Matcher with 
     static member Life with get() = Matcher.AllOf(Component.Life) 
+
+type World with
+
+    member this.scoreEntity
+        with get() = this.GetGroup(Matcher.Score).GetSingleEntity()
+
+    member this.score
+        with get() = this.scoreEntity.score
+
+    member this.hasScore
+        with get() = notNull(this.scoreEntity)
+
+    member this.SetScore(newValue) =
+        if this.hasScore then
+            failwith "Single Entity Exception: Score"
+        let entity = this.CreateEntity()
+        entity.AddScore(newValue) |> ignore
+        entity
+
+    member this.ReplaceScore(newValue) =
+        let entity = this.scoreEntity
+        if isNull(entity) then
+            entity = this.SetScore(newValue) |> ignore
+        else
+            entity.ReplaceScore(newValue) |> ignore
+        entity
+
+    member this.RemoveScore() =
+        this.DestroyEntity(this.scoreEntity)
+
+
+    member this.mouseEntity
+        with get() = this.GetGroup(Matcher.Mouse).GetSingleEntity()
+
+    member this.mouse
+        with get() = this.mouseEntity.mouse
+
+    member this.hasMouse
+        with get() = notNull(this.mouseEntity)
+
+    member this.SetMouse(newValue) =
+        if this.hasMouse then
+            failwith "Single Entity Exception: Mouse"
+        let entity = this.CreateEntity()
+        entity.AddMouse(newValue) |> ignore
+        entity
+
+    member this.ReplaceMouse(newValue) =
+        let entity = this.mouseEntity
+        if isNull(entity) then
+            entity = this.SetMouse(newValue) |> ignore
+        else
+            entity.ReplaceMouse(newValue) |> ignore
+        entity
+
+    member this.RemoveMouse() =
+        this.DestroyEntity(this.mouseEntity)
+
+
+    member this.firingEntity
+        with get() = this.GetGroup(Matcher.Firing).GetSingleEntity()
+
+    member this.isFiring
+        with get() =
+            notNull(this.firingEntity)
+        and  set(value) =
+            let entity = this.firingEntity
+            if value <> notNull(entity) then
+                if value then
+                    this.CreateEntity().isFiring <- true
+                else
+                    this.DestroyEntity(entity)
+
+
+    member this.statusEntity
+        with get() = this.GetGroup(Matcher.Status).GetSingleEntity()
+
+    member this.status
+        with get() = this.statusEntity.status
+
+    member this.hasStatus
+        with get() = notNull(this.statusEntity)
+
+    member this.SetStatus(newValue) =
+        if this.hasStatus then
+            failwith "Single Entity Exception: Status"
+        let entity = this.CreateEntity()
+        entity.AddStatus(newValue) |> ignore
+        entity
+
+    member this.ReplaceStatus(newValue) =
+        let entity = this.statusEntity
+        if isNull(entity) then
+            entity = this.SetStatus(newValue) |> ignore
+        else
+            entity.ReplaceStatus(newValue) |> ignore
+        entity
+
+    member this.RemoveStatus() =
+        this.DestroyEntity(this.statusEntity)
+
+
+    member this.playerEntity
+        with get() = this.GetGroup(Matcher.Player).GetSingleEntity()
+
+    member this.isPlayer
+        with get() =
+            notNull(this.playerEntity)
+        and  set(value) =
+            let entity = this.playerEntity
+            if value <> notNull(entity) then
+                if value then
+                    this.CreateEntity().isPlayer <- true
+                else
+                    this.DestroyEntity(entity)

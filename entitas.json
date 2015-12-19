@@ -48,7 +48,8 @@
     "Player": false,
     "Position": [
       "x:number",
-      "y:number"
+      "y:number",
+	  "z:number"
     ],
     "ScaleAnimation": [
       "min:number",
@@ -66,7 +67,8 @@
     ],
     "Velocity": [
       "x:number",
-      "y:number"
+      "y:number",
+	  "z:number"
     ],
     "Score": [
       "value:number"

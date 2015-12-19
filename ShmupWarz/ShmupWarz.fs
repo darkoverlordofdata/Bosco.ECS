@@ -77,6 +77,7 @@ type PositionComponent() =
     inherit Component()
     member val x = 0.0f with get, set
     member val y = 0.0f with get, set
+    member val z = 0.0f with get, set
 
 [<AllowNullLiteral>]
 type ScaleAnimationComponent() =
@@ -103,6 +104,7 @@ type VelocityComponent() =
     inherit Component()
     member val x = 0.0f with get, set
     member val y = 0.0f with get, set
+    member val z = 0.0f with get, set
 
 [<AllowNullLiteral>]
 type ScoreComponent() =

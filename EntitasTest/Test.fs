@@ -14,11 +14,11 @@ type FirstTest() =
 
     let CreatePlayer() =
         world.CreateEntity()
-            .AddPosition(1.0f, 1.0f)
+            .AddPosition(1.0f, 1.0f, 1.0f)
             .AddBounds(0.75f)
             .IsBullet(true)
             .AddHealth(200.0f, 200.0f)
-            .AddVelocity(0.1f, 0.1f)
+            .AddVelocity(0.1f, 0.1f, 0.1f)
 
 
 
@@ -37,7 +37,7 @@ type FirstTest() =
     member this.TestId2() =
 
         e2 <- world.CreateEntity()
-        e2.AddPosition(1.0f, 1.0f) |> ignore
+        e2.AddPosition(1.0f, 1.0f, 1.0f) |> ignore
         Assert.AreEqual(e2.ToString(), "Entity_2(0)(Position)")
 
 
@@ -53,8 +53,8 @@ type FirstTest() =
             else
                 Assert.AreEqual("Entity_3(0)(Position,Velocity)", e3.ToString())
         )
-        e3.AddPosition(1.0f, 1.0f) |> ignore
-        e3.AddVelocity(0.1f, 0.1f) |> ignore
+        e3.AddPosition(1.0f, 1.0f, 1.0f) |> ignore
+        e3.AddVelocity(0.1f, 0.1f, 1.0f) |> ignore
 
     [<Test>]//check total counts
     member this.TestId4() =

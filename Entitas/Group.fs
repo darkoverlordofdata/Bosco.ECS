@@ -97,7 +97,7 @@ type Group (matcher:Matcher) =
     let added  = entities.Add(entity)
     if added then
       entitiesCache <- Array.empty<Entity>
-      singleEntityCache <- null //Array.empty<Entity>
+      singleEntityCache <- null
       entity.Retain(this)
     added
 
@@ -110,7 +110,7 @@ type Group (matcher:Matcher) =
     let removed = entities.Remove(entity)
     if removed then
       entitiesCache <- Array.empty<Entity>
-      singleEntityCache <- null //Array.empty<Entity>
+      singleEntityCache <- null
       entity.Retain(this)
     removed
 
@@ -152,7 +152,7 @@ type Group (matcher:Matcher) =
     if isNull(singleEntityCache) then
       match entities.Count with
       | 1 ->
-        let mutable enumerator = entities.GetEnumerator()
+        use mutable enumerator = entities.GetEnumerator()
         enumerator.MoveNext() |> ignore
         singleEntityCache <- enumerator.Current
       | 0 ->
@@ -168,7 +168,7 @@ type Group (matcher:Matcher) =
    *)
   member this.GetEntities() =
     if entitiesCache.Length = 0 then
-      entitiesCache  <- (Array.zeroCreate entities.Count)  
+      entitiesCache <- (Array.zeroCreate entities.Count)  
       entities.CopyTo(entitiesCache)
     entitiesCache
 

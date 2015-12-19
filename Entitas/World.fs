@@ -236,7 +236,7 @@ type World (totalComponents:int) =
    *
    * @param system
    *)
-  member this.Add(system:Object) =
+  member this.Add(system:obj) =
     match system with 
     | :? IInitializeSystem as initializeSystem ->
       initializeSystems.Add(initializeSystem)

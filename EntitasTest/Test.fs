@@ -13,13 +13,12 @@ type FirstTest() =
     let world = new World(64)
 
     let CreatePlayer() =
-        let e = world.CreateEntity()
-        e.AddPosition(1.0f, 1.0f) |> ignore
-        e.AddBounds(0.75f) |> ignore
-        e.IsBullet(true) |> ignore
-        e.AddHealth(200.0f, 200.0f) |> ignore
-        e.AddVelocity(0.1f, 0.1f) |> ignore
-        e
+        world.CreateEntity()
+            .AddPosition(1.0f, 1.0f)
+            .AddBounds(0.75f)
+            .IsBullet(true)
+            .AddHealth(200.0f, 200.0f)
+            .AddVelocity(0.1f, 0.1f)
 
 
 
@@ -31,11 +30,10 @@ type FirstTest() =
     member this.TestId1() =
 
         e1 <- CreatePlayer()
-        let id = e1.Id
-        Assert.AreEqual(1, id)
+        Assert.AreEqual(1, e1.Id)
 
 
-    [<Test>]//2nd entity - name
+    [<Test>]//2nd entity - position
     member this.TestId2() =
 
         e2 <- world.CreateEntity()
@@ -43,7 +41,7 @@ type FirstTest() =
         Assert.AreEqual(e2.ToString(), "Entity_2(0)(Position)")
 
 
-    [<Test>]//3rd entity - name, property
+    [<Test>]//3rd entity - position, Velocity
     member this.TestId3() =
 
         let mutable k = 0

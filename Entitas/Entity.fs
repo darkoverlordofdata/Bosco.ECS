@@ -65,7 +65,7 @@ type Entity (totalComponents:int) =
   let onComponentReplaced               = new Event<ComponentReplacedDelegate, ComponentReplacedArgs>()
   let onEntityReleased                  = new Event<EntityReleasedDelegate, EntityReleasedArgs>()
   let components: Component array       = (Array.zeroCreate totalComponents)
-  let owners                            = new HashSet<Object>() 
+  let owners                            = new HashSet<obj>() 
   let mutable componentsCache           = Array.empty<Component> //new ResizeArray<Component>()
   let mutable toStringCache             = "" 
 
@@ -198,7 +198,7 @@ type Entity (totalComponents:int) =
    * Retain (reference count)
    *
    *)
-  member this.Retain(owner:Object) =
+  member this.Retain(owner:obj) =
     if not(owners.Add(owner)) then
       failwithf "Entity is alread retained by %s" (owner.ToString())
 
@@ -206,7 +206,7 @@ type Entity (totalComponents:int) =
    * Release (reference count)
    *
    *)
-  member this.Release(owner:Object) =
+  member this.Release(owner:obj) =
     if not(  owners.Remove(owner)) then
       failwithf "Entity was not retained by %s" (owner.ToString())
  

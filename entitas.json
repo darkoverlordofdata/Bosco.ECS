@@ -4,7 +4,8 @@
   "output": {
     "javascript": "web/src/schmupwarz/generatedExtensions.js",
     "typescript": "lib/src/generatedComponents.ts",
-    "declaration": "lib/ext/schmupwarz.d.ts"
+    "declaration": "lib/ext/schmupwarz.d.ts",
+	"fsharp":"ShmupWarz/"
   },
   "alloc": {
     "entities": 200,

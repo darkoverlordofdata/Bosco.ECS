@@ -8,7 +8,6 @@ namespace ShmupWarz
 open Entitas
 open System
 open System.Collections.Generic
-open Microsoft.FSharp.Reflection
 
 type EntitySpawningTimerSystem(world) =
     interface IExecuteSystem with

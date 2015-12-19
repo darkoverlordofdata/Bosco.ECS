@@ -31,7 +31,23 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ShmupWarz.fs" />
-    <Compile Include="ShmupWarxExtensions.fs" />
+    <Compile Include="ShmupWarzExtensions.fs" />
+    <Compile Include="Systems\AddViewSystem.fs" />
+    <Compile Include="Systems\BackgroundSystem.fs" />
+    <Compile Include="Systems\CollisionSystem.fs" />
+    <Compile Include="Systems\ColorAnimationSystem.fs" />
+    <Compile Include="Systems\DestroySystem.fs" />
+    <Compile Include="Systems\EntitySpawningTimerSystem.fs" />
+    <Compile Include="Systems\ExpiringSystem.fs" />
+    <Compile Include="Systems\HealthRenderSystem.fs" />
+    <Compile Include="Systems\HudRenderSystem.fs" />
+    <Compile Include="Systems\MovementSystem.fs" />
+    <Compile Include="Systems\ParallaxStarRepeatingSystem.fs" />
+    <Compile Include="Systems\PlayerInputSystem.fs" />
+    <Compile Include="Systems\RemoveOffscreenShipsSystem.fs" />
+    <Compile Include="Systems\ScaleAnimationSystem.fs" />
+    <Compile Include="Systems\SoundEffectSystem.fs" />
+    <Compile Include="Systems\SpriteRenderSystem.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>

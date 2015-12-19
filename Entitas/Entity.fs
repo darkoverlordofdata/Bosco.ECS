@@ -48,7 +48,7 @@ type Entity (totalComponents:int) =
    * parse component class name
    *)
   let (|Component|) (s:string) =
-      let s0 = s.Split([|'.'|])
+      let s0 = s.Split([|'+'|])
       let s1 = s0.[1]
       if s1.EndsWith("Component") then
           s1.Substring(0,s1.LastIndexOf("Component"))

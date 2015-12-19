@@ -5,7 +5,6 @@ open NUnit.Framework
 open Entitas
 open Microsoft.FSharp.Reflection
 open ShmupWarz
-open ShmupWarzExtensions
 
 [<TestFixture>]
 type FirstTest() =

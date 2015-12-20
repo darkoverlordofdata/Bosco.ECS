@@ -160,3 +160,30 @@ module ComponentExtensions =
     type LifeComponent() =
         inherit Component()
         member val count = 0.0f with get, set
+    type Component with 
+
+        static member Bounds with get() = 1
+        static member Bullet with get() = 2
+        static member ColorAnimation with get() = 3
+        static member Enemy with get() = 4
+        static member Expires with get() = 5
+        static member Firing with get() = 6
+        static member Health with get() = 7
+        static member ParallaxStar with get() = 8
+        static member Player with get() = 9
+        static member Position with get() = 10
+        static member ScaleAnimation with get() = 11
+        static member SoundEffect with get() = 12
+        static member Sprite with get() = 13
+        static member Velocity with get() = 14
+        static member Score with get() = 15
+        static member Destroy with get() = 16
+        static member Mouse with get() = 17
+        static member Scale with get() = 18
+        static member Resource with get() = 19
+        static member Layer with get() = 20
+        static member Background with get() = 21
+        static member Mine with get() = 22
+        static member Status with get() = 23
+        static member Life with get() = 24
+        static member TotalComponents  with get() = 25

@@ -11,39 +11,10 @@ module EntityExtensions =
     open System
     open System.Collections.Generic
 
-    let isNull x = match x with null -> true | _ -> false
-    let notNull x = match x with null -> false | _ -> true
-
-
-
-    type Component with 
-        static member Bounds with get() = 1
-        static member Bullet with get() = 2
-        static member ColorAnimation with get() = 3
-        static member Enemy with get() = 4
-        static member Expires with get() = 5
-        static member Firing with get() = 6
-        static member Health with get() = 7
-        static member ParallaxStar with get() = 8
-        static member Player with get() = 9
-        static member Position with get() = 10
-        static member ScaleAnimation with get() = 11
-        static member SoundEffect with get() = 12
-        static member Sprite with get() = 13
-        static member Velocity with get() = 14
-        static member Score with get() = 15
-        static member Destroy with get() = 16
-        static member Mouse with get() = 17
-        static member Scale with get() = 18
-        static member Resource with get() = 19
-        static member Layer with get() = 20
-        static member Background with get() = 21
-        static member Mine with get() = 22
-        static member Status with get() = 23
-        static member Life with get() = 24
-        static member TotalComponents  with get() = 25
-
     type Entity with
+
+        (** Entity: Bounds methods*)
+
         member this.bounds
             with get() = this.GetComponent(Component.Bounds):?>BoundsComponent
 
@@ -81,7 +52,7 @@ module EntityExtensions =
             this.RemoveComponent(Component.Bounds) |> ignore
             this._boundsComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Bullet methods*)
 
         static member bulletComponent= new BulletComponent()
 
@@ -98,7 +69,8 @@ module EntityExtensions =
             this.isBullet <- value
             this
 
-    type Entity with
+        (** Entity: ColorAnimation methods*)
+
         member this.colorAnimation
             with get() = this.GetComponent(Component.ColorAnimation):?>ColorAnimationComponent
 
@@ -168,7 +140,7 @@ module EntityExtensions =
             this.RemoveComponent(Component.ColorAnimation) |> ignore
             this._colorAnimationComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Enemy methods*)
 
         static member enemyComponent= new EnemyComponent()
 
@@ -185,7 +157,8 @@ module EntityExtensions =
             this.isEnemy <- value
             this
 
-    type Entity with
+        (** Entity: Expires methods*)
+
         member this.expires
             with get() = this.GetComponent(Component.Expires):?>ExpiresComponent
 
@@ -223,7 +196,7 @@ module EntityExtensions =
             this.RemoveComponent(Component.Expires) |> ignore
             this._expiresComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Firing methods*)
 
         static member firingComponent= new FiringComponent()
 
@@ -240,7 +213,8 @@ module EntityExtensions =
             this.isFiring <- value
             this
 
-    type Entity with
+        (** Entity: Health methods*)
+
         member this.health
             with get() = this.GetComponent(Component.Health):?>HealthComponent
 
@@ -280,7 +254,7 @@ module EntityExtensions =
             this.RemoveComponent(Component.Health) |> ignore
             this._healthComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: ParallaxStar methods*)
 
         static member parallaxStarComponent= new ParallaxStarComponent()
 
@@ -297,7 +271,7 @@ module EntityExtensions =
             this.isParallaxStar <- value
             this
 
-    type Entity with
+        (** Entity: Player methods*)
 
         static member playerComponent= new PlayerComponent()
 
@@ -314,7 +288,8 @@ module EntityExtensions =
             this.isPlayer <- value
             this
 
-    type Entity with
+        (** Entity: Position methods*)
+
         member this.position
             with get() = this.GetComponent(Component.Position):?>PositionComponent
 
@@ -356,7 +331,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Position) |> ignore
             this._positionComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: ScaleAnimation methods*)
+
         member this.scaleAnimation
             with get() = this.GetComponent(Component.ScaleAnimation):?>ScaleAnimationComponent
 
@@ -402,7 +378,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.ScaleAnimation) |> ignore
             this._scaleAnimationComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: SoundEffect methods*)
+
         member this.soundEffect
             with get() = this.GetComponent(Component.SoundEffect):?>SoundEffectComponent
 
@@ -440,7 +417,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.SoundEffect) |> ignore
             this._soundEffectComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Sprite methods*)
+
         member this.sprite
             with get() = this.GetComponent(Component.Sprite):?>SpriteComponent
 
@@ -480,7 +458,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Sprite) |> ignore
             this._spriteComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Velocity methods*)
+
         member this.velocity
             with get() = this.GetComponent(Component.Velocity):?>VelocityComponent
 
@@ -522,7 +501,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Velocity) |> ignore
             this._velocityComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Score methods*)
+
         member this.score
             with get() = this.GetComponent(Component.Score):?>ScoreComponent
 
@@ -560,7 +540,7 @@ module EntityExtensions =
             this.RemoveComponent(Component.Score) |> ignore
             this._scoreComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Destroy methods*)
 
         static member destroyComponent= new DestroyComponent()
 
@@ -577,7 +557,8 @@ module EntityExtensions =
             this.isDestroy <- value
             this
 
-    type Entity with
+        (** Entity: Mouse methods*)
+
         member this.mouse
             with get() = this.GetComponent(Component.Mouse):?>MouseComponent
 
@@ -617,7 +598,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Mouse) |> ignore
             this._mouseComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Scale methods*)
+
         member this.scale
             with get() = this.GetComponent(Component.Scale):?>ScaleComponent
 
@@ -657,7 +639,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Scale) |> ignore
             this._scaleComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Resource methods*)
+
         member this.resource
             with get() = this.GetComponent(Component.Resource):?>ResourceComponent
 
@@ -695,7 +678,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Resource) |> ignore
             this._resourceComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Layer methods*)
+
         member this.layer
             with get() = this.GetComponent(Component.Layer):?>LayerComponent
 
@@ -733,7 +717,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Layer) |> ignore
             this._layerComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Background methods*)
+
         member this.background
             with get() = this.GetComponent(Component.Background):?>BackgroundComponent
 
@@ -771,7 +756,7 @@ module EntityExtensions =
             this.RemoveComponent(Component.Background) |> ignore
             this._backgroundComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Mine methods*)
 
         static member mineComponent= new MineComponent()
 
@@ -788,7 +773,8 @@ module EntityExtensions =
             this.isMine <- value
             this
 
-    type Entity with
+        (** Entity: Status methods*)
+
         member this.status
             with get() = this.GetComponent(Component.Status):?>StatusComponent
 
@@ -828,7 +814,8 @@ module EntityExtensions =
             this.RemoveComponent(Component.Status) |> ignore
             this._statusComponentPool.Push(c)
 
-    type Entity with
+        (** Entity: Life methods*)
+
         member this.life
             with get() = this.GetComponent(Component.Life):?>LifeComponent
 

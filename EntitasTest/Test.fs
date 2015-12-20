@@ -11,16 +11,6 @@ type FirstTest() =
 
     let world = new World(64)
 
-    let CreatePlayer() =
-        world.CreateEntity()
-            .AddPosition(1.0f, 1.0f, 1.0f)
-            .AddBounds(0.75f)
-            .IsBullet(true)
-            .AddHealth(200.0f, 200.0f)
-            .AddVelocity(0.1f, 0.1f, 0.1f)
-
-
-
     let mutable e1:Entity = null
     let mutable e2:Entity = null
     let mutable e3:Entity = null
@@ -28,7 +18,7 @@ type FirstTest() =
     [<Test>]//1st entity - no components
     member this.TestId1() =
 
-        e1 <- CreatePlayer()
+        e1 <- world.CreatePlayer()
         Assert.AreEqual(1, e1.Id)
 
 

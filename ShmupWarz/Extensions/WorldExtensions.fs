@@ -11,10 +11,9 @@ module WorldExtensions =
     open System
     open System.Collections.Generic
 
-    let isNull x = match x with null -> true | _ -> false
-    let notNull x = match x with null -> false | _ -> true
-
     type World with
+
+        (** World: Score methods*)
 
         member this.scoreEntity
             with get() = this.GetGroup(Matcher.Score).GetSingleEntity()
@@ -43,6 +42,7 @@ module WorldExtensions =
         member this.RemoveScore() =
             this.DestroyEntity(this.scoreEntity)
 
+        (** World: Mouse methods*)
 
         member this.mouseEntity
             with get() = this.GetGroup(Matcher.Mouse).GetSingleEntity()
@@ -71,6 +71,7 @@ module WorldExtensions =
         member this.RemoveMouse() =
             this.DestroyEntity(this.mouseEntity)
 
+        (** World: Firing methods*)
 
         member this.firingEntity
             with get() = this.GetGroup(Matcher.Firing).GetSingleEntity()
@@ -86,6 +87,7 @@ module WorldExtensions =
                     else
                         this.DestroyEntity(entity)
 
+        (** World: Status methods*)
 
         member this.statusEntity
             with get() = this.GetGroup(Matcher.Status).GetSingleEntity()
@@ -114,6 +116,7 @@ module WorldExtensions =
         member this.RemoveStatus() =
             this.DestroyEntity(this.statusEntity)
 
+        (** World: Player methods*)
 
         member this.playerEntity
             with get() = this.GetGroup(Matcher.Player).GetSingleEntity()

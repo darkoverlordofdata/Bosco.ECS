@@ -11,98 +11,99 @@ module MatcherExtensions =
     open System
     open System.Collections.Generic
 
-    type Matcher with 
+    type Matcher with
         static member Bounds
-            with get() = Matcher.AllOf(Component.Bounds) 
+            with get() = 
+                Matcher.AllOf(Component.Bounds) 
 
-    type Matcher with 
         static member Bullet
-            with get() = Matcher.AllOf(Component.Bullet) 
+            with get() = 
+                Matcher.AllOf(Component.Bullet) 
 
-    type Matcher with 
         static member ColorAnimation
-            with get() = Matcher.AllOf(Component.ColorAnimation) 
+            with get() = 
+                Matcher.AllOf(Component.ColorAnimation) 
 
-    type Matcher with 
         static member Enemy
-            with get() = Matcher.AllOf(Component.Enemy) 
+            with get() = 
+                Matcher.AllOf(Component.Enemy) 
 
-    type Matcher with 
         static member Expires
-            with get() = Matcher.AllOf(Component.Expires) 
+            with get() = 
+                Matcher.AllOf(Component.Expires) 
 
-    type Matcher with 
         static member Firing
-            with get() = Matcher.AllOf(Component.Firing) 
+            with get() = 
+                Matcher.AllOf(Component.Firing) 
 
-    type Matcher with 
         static member Health
-            with get() = Matcher.AllOf(Component.Health) 
+            with get() = 
+                Matcher.AllOf(Component.Health) 
 
-    type Matcher with 
         static member ParallaxStar
-            with get() = Matcher.AllOf(Component.ParallaxStar) 
+            with get() = 
+                Matcher.AllOf(Component.ParallaxStar) 
 
-    type Matcher with 
         static member Player
-            with get() = Matcher.AllOf(Component.Player) 
+            with get() = 
+                Matcher.AllOf(Component.Player) 
 
-    type Matcher with 
         static member Position
-            with get() = Matcher.AllOf(Component.Position) 
+            with get() = 
+                Matcher.AllOf(Component.Position) 
 
-    type Matcher with 
         static member ScaleAnimation
-            with get() = Matcher.AllOf(Component.ScaleAnimation) 
+            with get() = 
+                Matcher.AllOf(Component.ScaleAnimation) 
 
-    type Matcher with 
         static member SoundEffect
-            with get() = Matcher.AllOf(Component.SoundEffect) 
+            with get() = 
+                Matcher.AllOf(Component.SoundEffect) 
 
-    type Matcher with 
         static member Sprite
-            with get() = Matcher.AllOf(Component.Sprite) 
+            with get() = 
+                Matcher.AllOf(Component.Sprite) 
 
-    type Matcher with 
         static member Velocity
-            with get() = Matcher.AllOf(Component.Velocity) 
+            with get() = 
+                Matcher.AllOf(Component.Velocity) 
 
-    type Matcher with 
         static member Score
-            with get() = Matcher.AllOf(Component.Score) 
+            with get() = 
+                Matcher.AllOf(Component.Score) 
 
-    type Matcher with 
         static member Destroy
-            with get() = Matcher.AllOf(Component.Destroy) 
+            with get() = 
+                Matcher.AllOf(Component.Destroy) 
 
-    type Matcher with 
         static member Mouse
-            with get() = Matcher.AllOf(Component.Mouse) 
+            with get() = 
+                Matcher.AllOf(Component.Mouse) 
 
-    type Matcher with 
         static member Scale
-            with get() = Matcher.AllOf(Component.Scale) 
+            with get() = 
+                Matcher.AllOf(Component.Scale) 
 
-    type Matcher with 
         static member Resource
-            with get() = Matcher.AllOf(Component.Resource) 
+            with get() = 
+                Matcher.AllOf(Component.Resource) 
 
-    type Matcher with 
         static member Layer
-            with get() = Matcher.AllOf(Component.Layer) 
+            with get() = 
+                Matcher.AllOf(Component.Layer) 
 
-    type Matcher with 
         static member Background
-            with get() = Matcher.AllOf(Component.Background) 
+            with get() = 
+                Matcher.AllOf(Component.Background) 
 
-    type Matcher with 
         static member Mine
-            with get() = Matcher.AllOf(Component.Mine) 
+            with get() = 
+                Matcher.AllOf(Component.Mine) 
 
-    type Matcher with 
         static member Status
-            with get() = Matcher.AllOf(Component.Status) 
+            with get() = 
+                Matcher.AllOf(Component.Status) 
 
-    type Matcher with 
         static member Life
-            with get() = Matcher.AllOf(Component.Life) 
+            with get() = 
+                Matcher.AllOf(Component.Life) 

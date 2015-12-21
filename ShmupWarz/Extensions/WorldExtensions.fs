@@ -27,7 +27,7 @@ module WorldExtensions =
         member this.SetScore(newValue) =
             if this.hasScore then
                 failwith "Single Entity Exception: Score"
-            let entity = this.CreateEntity()
+            let entity = this.CreateEntity("Score")
             entity.AddScore(newValue) |> ignore
             entity
 
@@ -56,7 +56,7 @@ module WorldExtensions =
         member this.SetMouse(newValue) =
             if this.hasMouse then
                 failwith "Single Entity Exception: Mouse"
-            let entity = this.CreateEntity()
+            let entity = this.CreateEntity("Mouse")
             entity.AddMouse(newValue) |> ignore
             entity
 
@@ -83,7 +83,7 @@ module WorldExtensions =
                 let entity = this.firingEntity
                 if value <> notNull(entity) then
                     if value then
-                        this.CreateEntity().isFiring <- true
+                        this.CreateEntity("Firing").isFiring <- true
                     else
                         this.DestroyEntity(entity)
 
@@ -101,7 +101,7 @@ module WorldExtensions =
         member this.SetStatus(newValue) =
             if this.hasStatus then
                 failwith "Single Entity Exception: Status"
-            let entity = this.CreateEntity()
+            let entity = this.CreateEntity("Status")
             entity.AddStatus(newValue) |> ignore
             entity
 
@@ -128,6 +128,6 @@ module WorldExtensions =
                 let entity = this.playerEntity
                 if value <> notNull(entity) then
                     if value then
-                        this.CreateEntity().isPlayer <- true
+                        this.CreateEntity("Player").isPlayer <- true
                     else
                         this.DestroyEntity(entity)

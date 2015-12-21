@@ -18,8 +18,6 @@ type ExpiringSystem(world:World) =
     interface IExecuteSystem with
         member this.Execute() =
             for e in (group.GetEntities()) do
-                Debug.Log(sprintf "Check Expires: %f %s" (e.expires.delay) (e.ToString()))
                 e.expires.delay <- e.expires.delay - Time.deltaTime
                 if e.expires.delay <= 0.0f then
-                    Debug.Log(sprintf "Expired: %s" (e.ToString()))
                     e.IsDestroy(true) |> ignore

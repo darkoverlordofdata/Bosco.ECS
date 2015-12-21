@@ -66,7 +66,7 @@ type World (totalComponents:int) =
    *
    * @returns new entity
    *)
-  member this.CreateEntity() =
+  member this.CreateEntity(name) =
     let mutable entity = 
       match reusableEntities.Count with
       | 0 -> new Entity(totalComponents+1)
@@ -74,12 +74,14 @@ type World (totalComponents:int) =
     
     entity.IsEnabled <- true
     entity.Id <- creationIndex+1
+    entity.Name <- name
     entity.OnComponentAdded.AddHandler(this.updateGroupsComponentAdded)
     entity.OnComponentRemoved.AddHandler(this.updateGroupsComponentRemoved)
     entity.OnComponentReplaced.AddHandler(this.updateGroupsComponentReplaced)
     entity.OnEntityReleased.AddHandler(this.onEntityReleased)
     creationIndex <- entity.Id
-    entities.Add(entity) |> ignore
+    entities.Add(entity) |> ignore    
+    entitiesCache <- (Array.zeroCreate 0)
     onEntityCreated.Trigger(this, new EntityEventArgs(entity))
     entity
 
@@ -91,7 +93,8 @@ type World (totalComponents:int) =
    *)
   member this.DestroyEntity(entity:Entity) =
     let removed = entities.Remove(entity)
-    if not removed then failwith "Pool does not contain entity, could not destroy"
+    if not removed then failwithf "Pool does not contain entity, could not destroy %s" (entity.ToString())
+    entitiesCache <- (Array.zeroCreate 0)
     onEntityWillBeDestroyed.Trigger(this, new EntityEventArgs(entity))
     entity.destroy() |> ignore
     onEntityDestroyed.Trigger(this, new EntityEventArgs(entity))
@@ -223,9 +226,8 @@ type World (totalComponents:int) =
     new EntityReleasedDelegate (fun sender evt ->
       let entity = sender:?>Entity
 
-      //if entity.IsEnabled then
-      //  failwith "Entity is not destroyed, cannot release entity"
-      
+      if entity.IsEnabled then
+        failwithf "Entity is not destroyed, cannot release entity %s" (entity.ToString())
       entity.OnEntityReleased.RemoveHandler(this.onEntityReleased)
       retainedEntities.Remove(entity) |> ignore
       reusableEntities.Push(entity)

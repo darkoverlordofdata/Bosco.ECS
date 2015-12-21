@@ -26,7 +26,7 @@ type ScaleAnimationSystem(world:World) =
                         scale.x <- scaleAnimation.max
                         scale.y <- scale.x
                         scaleAnimation.active <- false
-                    else
+                    elif scale.x < scaleAnimation.min then
                         scale.x <- scaleAnimation.min
                         scale.y <- scale.x
                         scaleAnimation.active <- false

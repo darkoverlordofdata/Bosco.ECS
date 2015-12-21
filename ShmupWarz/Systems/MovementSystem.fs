@@ -23,4 +23,3 @@ type MovementSystem(world:World) =
                 e.position.x <- e.position.x + (e.velocity.x * delta)
                 e.position.y <- e.position.y + (e.velocity.y * delta)
                 e.position.z <- e.position.z + (e.velocity.z * delta)
-                

@@ -27,7 +27,6 @@ type GameController () =
 
     (** *)
     member this.Start () =
-        Debug.Log("Hello - ShmupWarz!")
         createSystems(world)
         world.Initialize()
         world.CreatePlayer()

@@ -41,7 +41,7 @@ type ComponentReplacedDelegate = delegate of obj * ComponentReplacedArgs -> unit
 type Entity (totalComponents:int) =
 
   let isNull x = match x with null -> true | _ -> false
-  let nonNull x = match x with null -> false | _ -> true
+  let notNull x = match x with null -> false | _ -> true
 
   (**
    * Component Active Pattern  
@@ -65,7 +65,7 @@ type Entity (totalComponents:int) =
   let onComponentReplaced               = new Event<ComponentReplacedDelegate, ComponentReplacedArgs>()
   let onEntityReleased                  = new Event<EntityReleasedDelegate, EntityReleasedArgs>()
   let components: Component array       = (Array.zeroCreate totalComponents)
-  let mutable componentsCache           = Array.empty<Component> //new ResizeArray<Component>()
+  let mutable componentsCache           = Array.empty<Component>
   let mutable toStringCache             = "" 
 
   member val OnComponentAdded           = onComponentAdded.Publish with get
@@ -74,6 +74,7 @@ type Entity (totalComponents:int) =
   member val OnEntityReleased           = onEntityReleased.Publish with get
 
   member val Id                         = 0 with get, set
+  member val Name                       = "" with get, set
   member val IsEnabled                  = false with get, set
   member val internal refCount          = 0 with get, set                
            
@@ -85,8 +86,10 @@ type Entity (totalComponents:int) =
    * @returns this entity
    *)
   member this.AddComponent(index:int, c:Component) =
-    if not this.IsEnabled then failwith "Entity is disabled, cannot add component"
-    if this.HasComponent(index) then failwithf "Entity already has component, cannot add at index %d" index
+    if not this.IsEnabled then 
+      failwith "Entity is disabled, cannot add component"
+    if this.HasComponent(index) then 
+      failwithf "Entity already has component, cannot add at index %d, %s" index (this.ToString())
 
     components.[index] <- c
     componentsCache <- Array.empty<Component>
@@ -101,8 +104,10 @@ type Entity (totalComponents:int) =
    * @returns this entity
    *)
   member this.RemoveComponent(index:int) =
-    if not this.IsEnabled then failwith "Entity is disabled, cannot remove component"
-    if not(this.HasComponent(index)) then failwithf "Entity does not have component, cannot remove at index %d" index
+    if not this.IsEnabled then 
+      failwith "Entity is disabled, cannot remove component"
+    if not(this.HasComponent(index)) then 
+      failwithf "Entity does not have component, cannot remove at index %d, %s" index (this.ToString())
 
     this.replaceComponent(index, null)
     this
@@ -115,10 +120,12 @@ type Entity (totalComponents:int) =
    * @returns this entity
    *)
   member this.ReplaceComponent(index:int, c:Component) =
-    if not this.IsEnabled then failwith "Entity is disabled, cannot replace at index %d" index
+    if not this.IsEnabled then 
+      failwith "Entity is disabled, cannot replace at index %d, %s" index (this.ToString())
+
     if this.HasComponent(index) then
       this.replaceComponent(index, c)
-    else
+    elif notNull(c) then
       this.AddComponent(index, c) |> ignore
     this
 
@@ -129,7 +136,9 @@ type Entity (totalComponents:int) =
    * @returns the component at index
    *)
   member this.GetComponent(index:int) =
-    if not(this.HasComponent(index)) then failwithf "Entity does not have component, cannot get at index %d" index
+    if not(this.HasComponent(index)) then 
+      failwithf "Entity does not have component, cannot get at index %d, %s" index (this.ToString())
+
     components.[index]
 
   (** 
@@ -149,7 +158,7 @@ type Entity (totalComponents:int) =
    * @returns true if entity has component at index
    *)
   member this.HasComponent(index:int) =
-    not(isNull(components.[index]))
+    notNull(components.[index])
 
 
   (** 
@@ -176,7 +185,7 @@ type Entity (totalComponents:int) =
     let mutable flag = false
 
     for index in indices do
-      if not(isNull(components.[index])) then
+      if notNull(components.[index]) then
         flag <- true
     flag
 
@@ -187,9 +196,8 @@ type Entity (totalComponents:int) =
   member this.RemoveAllComponents() =
     
     for i = 0 to components.Length-1 do
-      if not(isNull(components.[i])) then
-        components.[i] <- null
-
+      if notNull(components.[i]) then
+        this.replaceComponent(i, null)
 
   (** 
    * Retain (reference count)
@@ -207,7 +215,7 @@ type Entity (totalComponents:int) =
     if this.refCount = 0 then
       onEntityReleased.Trigger(this, new EntityReleasedArgs())
     elif this.refCount < 0 then
-      failwith "Entity is already released"
+      failwithf "Entity is already released %s" (this.ToString())
 
   (** 
    * ToString
@@ -218,12 +226,12 @@ type Entity (totalComponents:int) =
 
       let sb = new StringBuilder()
       sb.Append("Entity_") |> ignore
-      sb.Append(this.Id.ToString()) |> ignore
+      sb.Append(this.Name) |> ignore
       sb.Append("(") |> ignore
-      sb.Append(this.refCount.ToString()) |> ignore
+      sb.Append(this.Id.ToString()) |> ignore
       sb.Append(")") |> ignore
       sb.Append("(") |> ignore
-      let c = Array.filter nonNull components
+      let c = Array.filter notNull components
       for i = 0 to c.Length-1 do
         sb.Append(parsec(c.[i].GetType().ToString())) |> ignore
         if i < c.Length-1 then sb.Append(",") |> ignore
@@ -237,8 +245,8 @@ type Entity (totalComponents:int) =
    *
    *)
   member this.destroy() =
-    (this).RemoveAllComponents()
-    (this).IsEnabled = false
+    this.RemoveAllComponents()
+    this.IsEnabled <- false
 
   (** 
    * replaceComponent 
@@ -265,7 +273,7 @@ type EntityEqualityComparer() =
   interface IEqualityComparer<Entity> with
 
     member this.Equals(x, y) =
-      if x = y then true else false
+      if x.Id = y.Id then true else false
 
     member this.GetHashCode(e) =
       e.Id

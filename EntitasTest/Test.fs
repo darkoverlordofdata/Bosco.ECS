@@ -11,6 +11,7 @@ type FirstTest() =
 
     let world = new World(64)
 
+    let mutable e0:Entity = null
     let mutable e1:Entity = null
     let mutable e2:Entity = null
     let mutable e3:Entity = null
@@ -18,35 +19,46 @@ type FirstTest() =
     [<Test>]//1st entity - no components
     member this.TestId1() =
 
-        e1 <- world.CreatePlayerz()
-        Assert.AreEqual(1, e1.Id)
+        e1 <- world.CreateEntity("Playerz")
+            .AddBounds(1.0f)
+            .AddHealth(100.0f, 100.0f)
+            .IsPlayer(true)
+            .AddResource("Fighter")
 
+        Assert.AreEqual(1, e1.Id)
+        Assert.AreEqual("Entity_Playerz(1)(Bounds,Health,Player,Resource)", e1.ToString())
+        let m1 = Matcher.AllOf(1)
+        let g1 = world.GetGroup(m1)
+        //let s1 = g1.GetEntities()
+        //Assert.AreEqual(1, s1.Length)
+        Assert.AreEqual(1,1)
 
     [<Test>]//2nd entity - position
     member this.TestId2() =
 
-        e2 <- world.CreateEntity()
+        e2 <- world.CreateEntity("Test1")
         e2.AddPosition(1.0f, 1.0f, 1.0f) |> ignore
-        Assert.AreEqual(e2.ToString(), "Entity_2(0)(Position)")
+        Assert.AreEqual("Entity_Test1(2)(Position)", e2.ToString())
 
 
     [<Test>]//3rd entity - position, Velocity
     member this.TestId3() =
 
         let mutable k = 0
-        e3 <- world.CreateEntity()
+        e3 <- world.CreateEntity("Test2")
         let s = e3.OnComponentAdded.Subscribe(fun o -> 
             k <- k+1
             if k = 1 then
-                Assert.AreEqual("Entity_3(0)(Position)", e3.ToString())
+                Assert.AreEqual("Entity_Test2(3)(Position)", e3.ToString())
             else
-                Assert.AreEqual("Entity_3(0)(Position,Velocity)", e3.ToString())
+                Assert.AreEqual("Entity_Test2(3)(Position,Velocity)", e3.ToString())
         )
         e3.AddPosition(1.0f, 1.0f, 1.0f) |> ignore
         e3.AddVelocity(0.1f, 0.1f, 1.0f) |> ignore
 
     [<Test>]//check total counts
     member this.TestId4() =
+
 
         Assert.AreEqual(3, world.count)
         Assert.AreEqual(0, world.retainedEntitiesCount)
@@ -76,19 +88,39 @@ type FirstTest() =
     [<Test>]//Groups
     member this.TestId7() =
 
-        let g2 = world.GetGroup(Matcher.AllOf(10))
+        let m2 = Matcher.AllOf(10)
+        let g2 = world.GetGroup(m2)
         let s2 = g2.GetEntities()
-        Assert.AreEqual(3, s2.Length)
+        Assert.AreEqual(2, s2.Length)
 
         let g = world.GetGroup(Matcher.AllOf(10,14))
         let s = g.GetEntities()
         Assert.AreEqual(1, s.Length)
 
-
-    [<Test>]//Systems
+    [<Test>]//Groups
     member this.TestId8() =
 
-        let s = new CollisionSystem(world)
-        world.Add(s)
-        world.Initialize()
-        world.Execute()
+        e3.OnComponentRemoved.Subscribe(fun o ->
+            Assert.AreEqual("Entity_Test2(3)(Velocity)", e3.ToString())
+        ) |> ignore
+        e3.RemovePosition()
+
+    [<Test>]//Groups
+    member this.TestId9() =
+
+        e0 <- world.CreateEntity("Hello")
+        e0.AddHealth(10.0f, 10.0f) |> ignore
+        Assert.AreEqual(4, e0.Id)
+        Assert.AreEqual("Entity_Hello(4)(Health)", e0.ToString())
+
+        let g7 = world.GetGroup(Matcher.AllOf(7))
+        let s7 = g7.GetEntities()
+        Assert.AreEqual(2, s7.Length)
+
+        world.OnEntityDestroyed.Subscribe(fun o ->
+            Assert.AreEqual(2, world.count)
+            Assert.AreEqual(0, world.retainedEntitiesCount)
+            Assert.AreEqual(0, world.reusableEntitiesCount)
+        ) |> ignore
+
+        world.DestroyEntity(e0)

@@ -134,7 +134,7 @@ type Group (matcher:Matcher) =
    *)
   member this.removeEntity(entity, index, comp) =
     if this.removeEntitySilently(entity) then
-      onEntityAdded.Trigger(this, new GroupChangedArgs(entity, index, comp))
+      onEntityRemoved.Trigger(this, new GroupChangedArgs(entity, index, comp))
 
   (** 
    * ContainsEntity

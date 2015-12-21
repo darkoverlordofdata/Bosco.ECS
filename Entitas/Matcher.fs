@@ -27,6 +27,8 @@ type Matcher () =
         if i < indices.Length-1 then sb.Append(",") |> ignore
       sb.Append(")") |> ignore
 
+  member val uuid = System.Guid.NewGuid().ToString() with get
+
   member this.Id
     with get() = _id
   member this.Indices

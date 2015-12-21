@@ -25,7 +25,8 @@ type PlayerInputSystem(world:World) =
             player.position.y <- mousePosition.y
 
             let isFiring = Input.GetMouseButton(0) || Input.GetKey("z")
-            world.isFiring <- isFiring
+            player.isFiring <- true
+            //world.isFiring <- true
 
             if isFiring then
                 if timeToFire <= 0.0f then

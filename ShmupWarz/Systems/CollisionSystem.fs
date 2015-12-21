@@ -42,17 +42,16 @@ type EnemyBulletCollision(world, bullets, enemies) =
         let mutable health = ship.health
         health.health <- health.health-1.0f
         if health.health <= 0.0f then
-            world.score.value <- world.score.value + health.maximumHealth
+            //world.score.value <- world.score.value + health.maximumHealth
             ship.IsDestroy(true) |> ignore
             let position = ship.position
             world.CreateBigExplosion(position.x, position.y) |> ignore
         else
-            if ship.hasView then
-                let o = (ship.view).gameObject
-                let mutable text = (o:?>GameObject).GetComponent("TextMesh")
+            let o = (ship.view).gameObject
+            let mutable text = (o:?>GameObject).GetComponent("TextMesh")
 
-                let percentage = Math.Truncate(float(health.health / health.maximumHealth) * 100.0)
-                (text:?>TextMesh).text <- (sprintf "%f%%" percentage)
+            let percentage = Math.Truncate(float(health.health / health.maximumHealth) * 100.0)
+            (text:?>TextMesh).text <- (sprintf "%i%%" (int percentage))
 
 
 type PlayerMineCollision(world, mines, players) =

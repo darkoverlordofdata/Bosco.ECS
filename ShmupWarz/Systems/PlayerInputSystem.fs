@@ -5,14 +5,35 @@ namespace ShmupWarz
  *
  *)
 
-open Entitas
 open System
 open System.Collections.Generic
+open Entitas
+open ShmupWarz
+open UnityEngine
 
-type PlayerInputSystem(world) =
+type PlayerInputSystem(world:World) =
+
+    let group = world.GetGroup(Matcher.Player)
+    let mutable timeToFire = 0.0f
+
     interface IExecuteSystem with
         member this.Execute() =
-            ()
-    interface IInitializeSystem with
-        member this.Initialize() =
-            ()
+
+            let mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition)
+            let mutable player = group.GetSingleEntity()
+            player.position.x <- mousePosition.x
+            player.position.y <- mousePosition.y
+
+            let isFiring = Input.GetMouseButton(0) || Input.GetKey("z")
+            world.isFiring <- isFiring
+
+            if isFiring then
+                if timeToFire <= 0.0f then
+                    world.CreateBullet(mousePosition.x+1.0f, mousePosition.y) |> ignore
+                    world.CreateBullet(mousePosition.x-1.0f, mousePosition.y) |> ignore
+                    timeToFire <- 0.1f
+
+            if timeToFire > 0.0f then
+                timeToFire <- timeToFire - Time.deltaTime
+                if timeToFire < 0.0f then timeToFire <- 0.0f
+

@@ -60,9 +60,9 @@ module MatcherExtensions =
             with get() = 
                 Matcher.AllOf(Component.SoundEffect) 
 
-        static member Sprite
+        static member View
             with get() = 
-                Matcher.AllOf(Component.Sprite) 
+                Matcher.AllOf(Component.View) 
 
         static member Velocity
             with get() = 

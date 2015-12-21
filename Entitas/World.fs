@@ -36,7 +36,7 @@ type World (totalComponents:int) =
   let onEntityDestroyed                 = new Event<EntityDestroyedDelegate, EntityEventArgs>()
   let onGroupCreated                    = new Event<GroupCreatedDelegate, GroupEventArgs>()
   let onGroupCleared                    = new Event<GroupClearedDelegate, GroupEventArgs>()
-  let entities                          = new HashSet<Entity>()
+  let entities                          = new HashSet<Entity>(EntityEqualityComparer.comparer)
   let groups                            = new Dictionary<string,Group>()
   let groupsForIndex                    = (Array.zeroCreate (totalComponents+1))
   let reusableEntities                  = new Stack<Entity>()
@@ -95,7 +95,7 @@ type World (totalComponents:int) =
     onEntityWillBeDestroyed.Trigger(this, new EntityEventArgs(entity))
     entity.destroy() |> ignore
     onEntityDestroyed.Trigger(this, new EntityEventArgs(entity))
-    if entity.retainCount = 1 then
+    if entity.refCount = 1 then
       entity.OnEntityReleased.RemoveHandler(this.onEntityReleased)
       reusableEntities.Push(entity)
     else
@@ -223,8 +223,8 @@ type World (totalComponents:int) =
     new EntityReleasedDelegate (fun sender evt ->
       let entity = sender:?>Entity
 
-      if entity.IsEnabled then
-        failwith "Entity is not destroyed, cannot release entity"
+      //if entity.IsEnabled then
+      //  failwith "Entity is not destroyed, cannot release entity"
       
       entity.OnEntityReleased.RemoveHandler(this.onEntityReleased)
       retainedEntities.Remove(entity) |> ignore

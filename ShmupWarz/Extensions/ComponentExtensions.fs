@@ -96,9 +96,8 @@ module ComponentExtensions =
         member val effect = 0.0f with get, set
 
     [<AllowNullLiteral>]
-    type SpriteComponent() =
+    type ViewComponent() =
         inherit Component()
-        member val layer = 0.0f with get, set
         member val gameObject = null with get, set
 
     [<AllowNullLiteral>]
@@ -160,8 +159,8 @@ module ComponentExtensions =
     type LifeComponent() =
         inherit Component()
         member val count = 0.0f with get, set
-    type Component with 
 
+    type Component with 
         static member Bounds with get() = 1
         static member Bullet with get() = 2
         static member ColorAnimation with get() = 3
@@ -174,7 +173,7 @@ module ComponentExtensions =
         static member Position with get() = 10
         static member ScaleAnimation with get() = 11
         static member SoundEffect with get() = 12
-        static member Sprite with get() = 13
+        static member View with get() = 13
         static member Velocity with get() = 14
         static member Score with get() = 15
         static member Destroy with get() = 16

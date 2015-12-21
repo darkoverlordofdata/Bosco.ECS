@@ -5,11 +5,17 @@ namespace ShmupWarz
  *
  *)
 
-open Entitas
 open System
 open System.Collections.Generic
+open Entitas
+open ShmupWarz
+open UnityEngine
 
-type HealthRenderSystem(world) =
+type HealthRenderSystem(world:World) =
+
+    let group = world.GetGroup(Matcher.AllOf(Matcher.Position, Matcher.Health, Matcher.Enemy))
+
     interface IExecuteSystem with
         member this.Execute() =
-            ()
+            for e in (group.GetEntities()) do
+                

@@ -9,7 +9,7 @@ open Entitas
 open System
 open System.Collections.Generic
 
-type HudRenderSystem(world) =
+type HudRenderSystem(world:World) =
     interface IExecuteSystem with
         member this.Execute() =
             ()

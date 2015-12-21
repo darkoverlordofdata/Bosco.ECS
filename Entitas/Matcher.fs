@@ -130,7 +130,7 @@ type Matcher () =
    *)
   static member mergeIndices(matchers:Matcher[]):int[] =
     let mutable indices = (Array.zeroCreate matchers.Length)
-    for i=0 to matchers.Length do
+    for i=0 to matchers.Length-1 do
       let matcher = matchers.[i]
       if matcher.Indices.Length <> 1 then
         failwithf "Matcher indices length not = 1 %s" (matchers.[i].ToString())

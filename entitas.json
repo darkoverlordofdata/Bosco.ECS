@@ -61,8 +61,7 @@
     "SoundEffect": [
       "effect:number"
     ],
-    "Sprite": [
-      "layer:number",
+    "View": [
       "gameObject:any"
     ],
     "Velocity": [
@@ -146,29 +145,16 @@
       "ISetPool",
       "IExecuteSystem"
     ],
-    "SpriteRenderSystem": [
+    "RenderPositionSystem": [
       "ISetPool",
       "IExecuteSystem"
-    ],
-    "HealthRenderSystem": [
-      "ISetPool",
-      "IExecuteSystem"
-    ],
-    "HudRenderSystem": [
-      "ISetPool",
-      "IExecuteSystem",
-      "IInitializeSystem"
     ],
     "DestroySystem": [
       "ISetPool",
       "IExecuteSystem"
     ],
     "AddViewSystem": [
-      "ISetPool"
-    ],
-    "BackgroundSystem": [
       "ISetPool",
-      "IExecuteSystem",
       "IInitializeSystem"
     ]
   },

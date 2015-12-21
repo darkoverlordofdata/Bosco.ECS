@@ -9,7 +9,7 @@ open Entitas
 open System
 open System.Collections.Generic
 
-type ParallaxStarRepeatingSystem(world) =
+type ParallaxStarRepeatingSystem(world:World) =
     interface IExecuteSystem with
         member this.Execute() =
             ()

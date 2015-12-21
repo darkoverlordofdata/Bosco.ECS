@@ -65,7 +65,6 @@ type Entity (totalComponents:int) =
   let onComponentReplaced               = new Event<ComponentReplacedDelegate, ComponentReplacedArgs>()
   let onEntityReleased                  = new Event<EntityReleasedDelegate, EntityReleasedArgs>()
   let components: Component array       = (Array.zeroCreate totalComponents)
-  let owners                            = new HashSet<obj>() 
   let mutable componentsCache           = Array.empty<Component> //new ResizeArray<Component>()
   let mutable toStringCache             = "" 
 
@@ -74,11 +73,9 @@ type Entity (totalComponents:int) =
   member val OnComponentReplaced        = onComponentReplaced.Publish with get
   member val OnEntityReleased           = onEntityReleased.Publish with get
 
-  member val Id                       = 0 with get, set
-  member val IsEnabled                = false with get, set
-
-  member this.retainCount                
-    with get() = owners.Count
+  member val Id                         = 0 with get, set
+  member val IsEnabled                  = false with get, set
+  member val internal refCount          = 0 with get, set                
            
    (** 
    * AddComponent 
@@ -189,7 +186,7 @@ type Entity (totalComponents:int) =
    *)
   member this.RemoveAllComponents() =
     
-    for i = 0 to components.Length do
+    for i = 0 to components.Length-1 do
       if not(isNull(components.[i])) then
         components.[i] <- null
 
@@ -198,20 +195,19 @@ type Entity (totalComponents:int) =
    * Retain (reference count)
    *
    *)
-  member this.Retain(owner:obj) =
-    if not(owners.Add(owner)) then
-      failwithf "Entity is alread retained by %s" (owner.ToString())
+  member this.Retain() =
+    this.refCount <- this.refCount + 1
 
   (** 
    * Release (reference count)
    *
    *)
   member this.Release(owner:obj) =
-    if not(  owners.Remove(owner)) then
-      failwithf "Entity was not retained by %s" (owner.ToString())
- 
-    if owners.Count = 0 then
+    this.refCount <- this.refCount - 1
+    if this.refCount = 0 then
       onEntityReleased.Trigger(this, new EntityReleasedArgs())
+    elif this.refCount < 0 then
+      failwith "Entity is already released"
 
   (** 
    * ToString
@@ -224,7 +220,7 @@ type Entity (totalComponents:int) =
       sb.Append("Entity_") |> ignore
       sb.Append(this.Id.ToString()) |> ignore
       sb.Append("(") |> ignore
-      sb.Append(this.retainCount.ToString()) |> ignore
+      sb.Append(this.refCount.ToString()) |> ignore
       sb.Append(")") |> ignore
       sb.Append("(") |> ignore
       let c = Array.filter nonNull components
@@ -264,4 +260,13 @@ type Entity (totalComponents:int) =
         onComponentReplaced.Trigger(this, new ComponentReplacedArgs(index, previousComponent, replacement))
 
 
-  
+type EntityEqualityComparer() =
+  static member comparer with get() = new EntityEqualityComparer()
+  interface IEqualityComparer<Entity> with
+
+    member this.Equals(x, y) =
+      if x = y then true else false
+
+    member this.GetHashCode(e) =
+      e.Id
+    

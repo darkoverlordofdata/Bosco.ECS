@@ -5,11 +5,18 @@ namespace ShmupWarz
  *
  *)
 
-open Entitas
 open System
 open System.Collections.Generic
+open Entitas
+open ShmupWarz
+open UnityEngine
 
-type RemoveOffscreenShipsSystem(world) =
+type RemoveOffscreenShipsSystem(world:World) =
+
+    let group = world.GetGroup(Matcher.AllOf(Matcher.Velocity, Matcher.Position, Matcher.Health, Matcher.Bounds))
+
     interface IExecuteSystem with
         member this.Execute() =
-            ()
+            for e in (group.GetEntities()) do
+                if e.position.y < (0.0f - e.bounds.radius) then
+                    if not e.isPlayer then e.IsDestroy(true) |> ignore

@@ -18,7 +18,7 @@ type FirstTest() =
     [<Test>]//1st entity - no components
     member this.TestId1() =
 
-        e1 <- world.CreatePlayer()
+        e1 <- world.CreatePlayerz()
         Assert.AreEqual(1, e1.Id)
 
 
@@ -82,13 +82,13 @@ type FirstTest() =
 
         let g = world.GetGroup(Matcher.AllOf(10,14))
         let s = g.GetEntities()
-        Assert.AreEqual(2, s.Length)
+        Assert.AreEqual(1, s.Length)
 
 
     [<Test>]//Systems
     member this.TestId8() =
 
-        let s = new CollisionSystem()
+        let s = new CollisionSystem(world)
         world.Add(s)
         world.Initialize()
         world.Execute()

@@ -7,13 +7,15 @@ open System.Collections.Generic
 (** 
  * Group Events
  *)
-type GroupChangedArgs(index, newComponent) =
+type GroupChangedArgs(entity, index, newComponent) =
   inherit System.EventArgs()
+  member this.entity = entity
   member this.index = index
   member this.newComponent = newComponent
 
-type GroupUpdatedArgs(index, prevComponent, newComponent) =
+type GroupUpdatedArgs(entity, index, prevComponent, newComponent) =
   inherit System.EventArgs()
+  member this.entity = entity
   member this.index = index
   member this.prevComponent = prevComponent
   member this.newComponent = newComponent
@@ -32,7 +34,7 @@ type Group (matcher:Matcher) =
   let onEntityAdded                     = new Event<GroupChangedDelegate, GroupChangedArgs>()
   let onEntityRemoved                   = new Event<GroupChangedDelegate, GroupChangedArgs>()
   let onEntityUpdated                   = new Event<GroupUpdatedDelegate, GroupUpdatedArgs>()
-  let entities:HashSet<Entity>          = new HashSet<Entity>()
+  let entities:HashSet<Entity>          = new HashSet<Entity>(EntityEqualityComparer.comparer)
   let mutable entitiesCache             = Array.empty<Entity>
   let mutable toStringCache             = ""
 
@@ -84,9 +86,9 @@ type Group (matcher:Matcher) =
    *)
   member this.UpdateEntity(entity, index, previousComponent, newComponent) =
     if entities.Contains(entity) then
-      onEntityAdded.Trigger(this, new GroupChangedArgs(index, previousComponent))
-      onEntityAdded.Trigger(this, new GroupChangedArgs(index, newComponent))
-      onEntityUpdated.Trigger(this, new GroupUpdatedArgs(index, previousComponent, newComponent))
+      onEntityAdded.Trigger(this, new GroupChangedArgs(entity, index, previousComponent))
+      onEntityAdded.Trigger(this, new GroupChangedArgs(entity, index, newComponent))
+      onEntityUpdated.Trigger(this, new GroupUpdatedArgs(entity, index, previousComponent, newComponent))
 
   (** 
    * addEntitySilently
@@ -98,7 +100,7 @@ type Group (matcher:Matcher) =
     if added then
       entitiesCache <- Array.empty<Entity>
       singleEntityCache <- null
-      entity.Retain(this)
+      entity.Retain()
     added
 
   (** 
@@ -111,7 +113,7 @@ type Group (matcher:Matcher) =
     if removed then
       entitiesCache <- Array.empty<Entity>
       singleEntityCache <- null
-      entity.Retain(this)
+      entity.Retain()
     removed
 
   //member this.addEntity(entity) =
@@ -121,7 +123,7 @@ type Group (matcher:Matcher) =
 
   member this.addEntity(entity, index, comp) =
     if this.addEntitySilently(entity) then
-      onEntityAdded.Trigger(this, new GroupChangedArgs(index, comp))
+      onEntityAdded.Trigger(this, new GroupChangedArgs(entity, index, comp))
 
   (** 
    * removeEntity
@@ -132,7 +134,7 @@ type Group (matcher:Matcher) =
    *)
   member this.removeEntity(entity, index, comp) =
     if this.removeEntitySilently(entity) then
-      onEntityAdded.Trigger(this, new GroupChangedArgs(index, comp))
+      onEntityAdded.Trigger(this, new GroupChangedArgs(entity, index, comp))
 
   (** 
    * ContainsEntity

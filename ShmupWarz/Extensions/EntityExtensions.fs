@@ -417,46 +417,44 @@ module EntityExtensions =
             this.RemoveComponent(Component.SoundEffect) |> ignore
             this._soundEffectComponentPool.Push(c)
 
-        (** Entity: Sprite methods*)
+        (** Entity: View methods*)
 
-        member this.sprite
-            with get() = this.GetComponent(Component.Sprite):?>SpriteComponent
+        member this.view
+            with get() = this.GetComponent(Component.View):?>ViewComponent
 
-        member this.hasSprite
-            with get() = this.HasComponent(Component.Sprite)
+        member this.hasView
+            with get() = this.HasComponent(Component.View)
 
-        member this._spriteComponentPool
-             with get() = new Stack<SpriteComponent>()
+        member this._viewComponentPool
+             with get() = new Stack<ViewComponent>()
 
-        member this.ClearSpriteComponentPool() =
-            this._spriteComponentPool.Clear()
+        member this.ClearViewComponentPool() =
+            this._viewComponentPool.Clear()
 
-        member this.AddSprite(layer, gameObject) =
+        member this.AddView(gameObject) =
             let mutable c = 
-              match this._spriteComponentPool.Count with
-              | 0 -> new SpriteComponent()
-              | _ -> this._spriteComponentPool.Pop()
-            c.layer <- layer;
+              match this._viewComponentPool.Count with
+              | 0 -> new ViewComponent()
+              | _ -> this._viewComponentPool.Pop()
             c.gameObject <- gameObject;
-            this.AddComponent(Component.Sprite, c)
+            this.AddComponent(Component.View, c)
 
-        member this.ReplaceSprite(layer, gameObject) =
-            let previousComponent = if this.hasSprite then this.sprite else null
+        member this.ReplaceView(gameObject) =
+            let previousComponent = if this.hasView then this.view else null
             let mutable c = 
-              match this._spriteComponentPool.Count with
-              | 0 -> new SpriteComponent()
-              | _ -> this._spriteComponentPool.Pop()
-            c.layer <- layer;
+              match this._viewComponentPool.Count with
+              | 0 -> new ViewComponent()
+              | _ -> this._viewComponentPool.Pop()
             c.gameObject <- gameObject;
-            this.ReplaceComponent(Component.Sprite, c) |> ignore
+            this.ReplaceComponent(Component.View, c) |> ignore
             if not(isNull(previousComponent)) then
-                this._spriteComponentPool.Push(previousComponent)
+                this._viewComponentPool.Push(previousComponent)
             this
 
-        member this.RemoveSprite() =
-            let c = this.sprite
-            this.RemoveComponent(Component.Sprite) |> ignore
-            this._spriteComponentPool.Push(c)
+        member this.RemoveView() =
+            let c = this.view
+            this.RemoveComponent(Component.View) |> ignore
+            this._viewComponentPool.Push(c)
 
         (** Entity: Velocity methods*)
 

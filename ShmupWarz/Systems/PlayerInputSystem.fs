@@ -7,7 +7,7 @@ namespace ShmupWarz
 
 open System
 open System.Collections.Generic
-open Entitas
+open Bosco.ECS
 open ShmupWarz
 open UnityEngine
 

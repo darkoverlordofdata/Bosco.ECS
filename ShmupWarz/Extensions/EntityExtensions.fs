@@ -7,7 +7,7 @@ namespace ShmupWarz
 [<AutoOpen>]
 module EntityExtensions =
 
-    open Entitas
+    open Bosco.ECS
     open System
     open System.Collections.Generic
 

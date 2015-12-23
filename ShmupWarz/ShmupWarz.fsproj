@@ -31,6 +31,9 @@
       <HintPath>..\..\..\..\..\opt\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Bosco">
+      <HintPath>..\..\shmupwarz-unity\Assets\Libraries\Bosco\Bosco.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
@@ -41,10 +44,9 @@
     <Compile Include="Extensions\MatcherExtensions.fs" />
     <Compile Include="Extensions\WorldExtensions.fs" />
     <Compile Include="EntityFactory.fs" />
-    <Compile Include="Systems\AddViewSystem.fs" />
+    <Compile Include="Systems\ViewManagerSystem.fs" />
     <Compile Include="Systems\CollisionSystem.fs" />
     <Compile Include="Systems\ColorAnimationSystem.fs" />
-    <Compile Include="Systems\DestroySystem.fs" />
     <Compile Include="Systems\EntitySpawningTimerSystem.fs" />
     <Compile Include="Systems\ExpiringSystem.fs" />
     <Compile Include="Systems\MovementSystem.fs" />
@@ -58,9 +60,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Entitas\Entitas.fsproj">
+    <ProjectReference Include="..\ECS\Bosco.ECS.fsproj">
       <Project>{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}</Project>
-      <Name>Entitas</Name>
+      <Name>Bosco.ECS</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

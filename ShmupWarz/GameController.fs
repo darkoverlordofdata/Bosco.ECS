@@ -1,6 +1,6 @@
 ﻿namespace ShmupWarz
 open System
-open Entitas
+open Bosco.ECS
 open UnityEngine
 
 type GameController () =
@@ -18,10 +18,7 @@ type GameController () =
         world.Add(new ScaleAnimationSystem(world))
         world.Add(new RemoveOffscreenShipsSystem(world))
         world.Add(new RenderPositionSystem(world))
-        world.Add(new AddViewSystem(world))
-        //world.Add(new HealthRenderSystem(world))
-        //world.Add(new HudRenderSystem(world))
-        world.Add(new DestroySystem(world))
+        world.Add(new ViewManagerSystem(world))
 
     let world = new World(Component.TotalComponents)
 

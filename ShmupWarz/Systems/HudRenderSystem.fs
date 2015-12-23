@@ -5,7 +5,7 @@ namespace ShmupWarz
  *
  *)
 
-open Entitas
+open Bosco.ECS
 open System
 open System.Collections.Generic
 

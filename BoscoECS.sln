@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Entitas", "Entitas\Entitas.fsproj", "{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Bosco.ECS", "ECS\Bosco.ECS.fsproj", "{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}"
 EndProject
-Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "EntitasTest", "EntitasTest\EntitasTest.fsproj", "{B42724DA-C8E3-4B2B-975F-3A7C6E48002A}"
+Project("{f2a71f9b-5d33-465a-a702-920d77279786}") = "Test", "Test\Test.fsproj", "{B42724DA-C8E3-4B2B-975F-3A7C6E48002A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{749FC9F4-416C-4595-A2FF-FDEBA04F800C}"
 	ProjectSection(SolutionItems) = preProject

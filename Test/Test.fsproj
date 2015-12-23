@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B42724DA-C8E3-4B2B-975F-3A7C6E48002A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>EntitasTest</RootNamespace>
+    <AssemblyName>EntitasTest</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\shmupwarz-unity-fsharp\Assets\Libraries</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\..\shmupwarz-unity-fsharp\Assets\Libraries</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="FSharp.Core">
+      <HintPath>..\..\..\Applications\FSharp\FSharp.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\..\Applications\NUnit-2.6.4\bin\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Test.fs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\ShmupWarz\ShmupWarz.fsproj">
+      <Project>{CF905500-CBB1-4B67-8566-62265356CEED}</Project>
+      <Name>ShmupWarz</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ECS\Bosco.ECS.fsproj">
+      <Project>{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}</Project>
+      <Name>Bosco.ECS</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

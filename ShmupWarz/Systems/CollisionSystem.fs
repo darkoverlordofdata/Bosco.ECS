@@ -1,13 +1,11 @@
 namespace ShmupWarz
-
 (**
  * Entitas Generated Systems for ShmupWarz
  *
  *)
-
 open System
 open System.Collections.Generic
-open Entitas
+open Bosco.ECS
 open ShmupWarz
 open UnityEngine
 
@@ -47,10 +45,9 @@ type EnemyBulletCollision(world, bullets, enemies) =
             let position = ship.position
             world.CreateBigExplosion(position.x, position.y) |> ignore
         else
-            let o = (ship.view).gameObject
-            let mutable text = (o:?>GameObject).GetComponent("TextMesh")
-
             let percentage = Math.Truncate(float(health.health / health.maximumHealth) * 100.0)
+            let text = ((ship.view).gameObject:?>GameObject).GetComponent("TextMesh")
+
             (text:?>TextMesh).text <- (sprintf "%i%%" (int percentage))
 
 

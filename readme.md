@@ -1,7 +1,5 @@
-* ecs-fsharp
+* Bosco.ECS
 
-experiments using an ecs with unity+fsharp
 
-test project template generated using:
+A lightweight ECS based on Entitas
 
-        $ entitas generate -p fsharp

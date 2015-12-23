@@ -7,22 +7,22 @@ namespace ShmupWarz
 
 open System
 open System.Collections.Generic
-open Entitas
+open Bosco.ECS
 open ShmupWarz
 open UnityEngine
 
 type SpawnEnemy1(world:World, delay, repeat) =
-    inherit Timer(delay, repeat)
+    inherit Bosco.Utils.Timer(delay, repeat)
     override this.Execute() =
         world.CreateEnemy1() |> ignore
 
 type SpawnEnemy2(world:World, delay, repeat) =
-    inherit Timer(delay, repeat)
+    inherit Bosco.Utils.Timer(delay, repeat)
     override this.Execute() =
         world.CreateEnemy2() |> ignore
 
 type SpawnEnemy3(world:World, delay, repeat) =
-    inherit Timer(delay, repeat)
+    inherit Bosco.Utils.Timer(delay, repeat)
     override this.Execute() =
         world.CreateEnemy3() |> ignore
 

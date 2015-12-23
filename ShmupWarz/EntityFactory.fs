@@ -6,7 +6,7 @@
 [<AutoOpen>]
 module EntityFactory =
 
-    open Entitas
+    open Bosco.ECS
     open System
     open System.Collections.Generic
     open UnityEngine
@@ -17,15 +17,11 @@ module EntityFactory =
 
     type World with
 
-        member this.CreatePlayerz() =
-            let pos = Vector3(80.0f, 100.0f, 0.0f)
-            this.CreateEntity("Playerz")
-                .AddBounds(1.0f)
-                .AddHealth(100.0f, 100.0f)
-                .AddPosition(pos.x, pos.y, pos.z)
-                .IsPlayer(true)
-                .AddResource("fighter")
-
+        (** 
+         * Create Player
+         *
+         * @returns new player entity
+         *)
         member this.CreatePlayer() =
             let pos = Camera.main.ScreenToWorldPoint(new Vector3(float32(Screen.width/2), 100.0f, 0.0f))
             this.CreateEntity("Player")
@@ -35,6 +31,13 @@ module EntityFactory =
                 .IsPlayer(true)
                 .AddResource("fighter")
 
+        (** 
+         * Create Bullet
+         *
+         * @param x
+         * @param y
+         * @returns new bullet entity
+         *)
         member this.CreateBullet(x, y) =
             this.CreateEntity("Bullet")
                 .AddBounds(0.1f)
@@ -45,6 +48,15 @@ module EntityFactory =
                 .IsBullet(true)
                 .AddResource("bullet")
 
+        (** 
+         * Create Mine
+         *
+         * @param health
+         * @param x
+         * @param y
+         * @param velocity
+         * @returns new mine entity
+         *)
         member this.CreateMine(health, x, y, velocity) =
             let pos = Camera.main.ScreenToWorldPoint(new Vector3(float32(x), float32(Screen.height-y), 0.0f))
             this.CreateEntity("Mine")
@@ -55,6 +67,12 @@ module EntityFactory =
                 .IsMine(true)
                 .AddResource("mine"+health.ToString())
 
+        (** 
+         * Create Life
+         *
+         * @param ordinal
+         * @returns new life entity
+         *)
         member this.CreateLife(ordinal) =
             let x = (Screen.width/2)-((ordinal+1) * 40)+87
             let y = 80
@@ -64,19 +82,27 @@ module EntityFactory =
                 .AddLife(float32(ordinal))
                 .AddResource("life")
 
+        (** 
+         * Create Status
+         *
+         * @returns new status entity
+         *)
         member this.CreateStatus() =
             let x = (Screen.width/2)
             let y = 120
-            
             let pos = Camera.main.ScreenToWorldPoint(new Vector3(float32(x), float32(Screen.height-y), 0.0f))
             this.CreateEntity("Status")
                 .AddPosition(pos.x, pos.y, pos.z)
                 .AddResource("status")
 
+        (** 
+         * Create Enemy1
+         *
+         * @returns new enemy entity
+         *)
         member this.CreateEnemy1() =
             let x = rnd.Next(Screen.width)
             let y = Screen.height-100
-
             let pos = Camera.main.ScreenToWorldPoint(new Vector3(float32(x), float32(y), 0.0f))
             this.CreateEntity("Enemy1")
                 .AddBounds(1.0f)
@@ -86,10 +112,14 @@ module EntityFactory =
                 .IsEnemy(true)
                 .AddResource("enemy1")
 
+        (** 
+         * Create Enemy2
+         *
+         * @returns new enemy entity
+         *)
         member this.CreateEnemy2() =
             let x = rnd.Next(Screen.width)
             let y = Screen.height-200
-
             let pos = Camera.main.ScreenToWorldPoint(new Vector3(float32(x), float32(y), 0.0f))
             this.CreateEntity("Enemy2")
                 .AddBounds(2.0f)
@@ -99,10 +129,14 @@ module EntityFactory =
                 .IsEnemy(true)
                 .AddResource("enemy2")
 
+        (** 
+         * Create Enemy3
+         *
+         * @returns new enemy entity
+         *)
         member this.CreateEnemy3() =
             let x = rnd.Next(Screen.width)
             let y = Screen.height-300
-
             let pos = Camera.main.ScreenToWorldPoint(new Vector3(float32(x), float32(y), 0.0f))
             this.CreateEntity("Enemy3")
                 .AddBounds(3.0f)
@@ -112,6 +146,13 @@ module EntityFactory =
                 .IsEnemy(true)
                 .AddResource("enemy3")
 
+        (** 
+         * Create Huge Explosion
+         *
+         * @param x
+         * @param y
+         * @returns new explosion entity
+         *)
         member this.CreateHugeExplosion(x, y) =
             let scale = 1.0f
             this.CreateEntity("HugeExplosion")
@@ -121,6 +162,13 @@ module EntityFactory =
                 .AddPosition(x, y, 0.0f)
                 .AddResource("bigExplosion")
 
+        (** 
+         * Create Big Explosion
+         *
+         * @param x
+         * @param y
+         * @returns new explosion entity
+         *)
         member this.CreateBigExplosion(x, y) =
             let scale = 0.5f
             this.CreateEntity("BigExplosion")
@@ -130,6 +178,13 @@ module EntityFactory =
                 .AddPosition(x, y, 0.0f)
                 .AddResource("bigExplosion")
 
+        (** 
+         * Create Small Explosion
+         *
+         * @param x
+         * @param y
+         * @returns new explosion entity
+         *)
         member this.CreateSmallExplosion(x, y) =
             let scale = 0.1f
             this.CreateEntity("SmallExplosion")

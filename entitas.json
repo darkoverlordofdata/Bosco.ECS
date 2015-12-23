@@ -149,12 +149,8 @@
       "ISetPool",
       "IExecuteSystem"
     ],
-    "DestroySystem": [
-      "ISetPool",
-      "IExecuteSystem"
-    ],
-    "AddViewSystem": [
-      "ISetPool",
+    "ViewManagerSystem": [
+      "IExecuteSystem",
       "IInitializeSystem"
     ]
   },

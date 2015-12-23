@@ -1,16 +1,14 @@
 namespace ShmupWarz
-
 (**
  * Entitas Generated Systems for ShmupWarz
  *
  *)
-
-open Entitas
+open Bosco.ECS
 open System
 open System.Collections.Generic
 open UnityEngine
 
-type AddViewSystem(world:World) =
+type ViewManagerSystem(world:World) =
 
     let _viewContainer = ((new GameObject("Views")).transform)
     let mutable group = world.GetGroup(Matcher.AllOf(Matcher.Destroy))
@@ -25,6 +23,7 @@ type AddViewSystem(world:World) =
                 let gameObject:GameObject = UnityEngine.Object.Instantiate(res):?>GameObject
 
                 if not(IsNull(gameObject)) then
+
                     if e.hasPosition then
                         let pos = e.position
                         gameObject.transform.position <- new Vector3(pos.x, pos.y, 0.0f)

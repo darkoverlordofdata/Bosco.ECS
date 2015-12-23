@@ -14,5 +14,3 @@ module GlobalFunctions =
         let y = box x // In case of value types
         obj.ReferenceEquals(y, Unchecked.defaultof<_>) || // Regular null check
         y.Equals(Unchecked.defaultof<_>) // Will call Unity overload if needed
-
-

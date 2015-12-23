@@ -1,6 +1,5 @@
 ﻿namespace ShmupWarz
     
-    open Entitas
     open System
     open System.Collections.Generic
     open UnityEngine

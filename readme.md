@@ -1,5 +1,5 @@
 * Bosco.ECS
 
 
-A lightweight ECS based on Entitas
+A lightweight ECS inspired by Entitas
 

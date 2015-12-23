@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Entitas</RootNamespace>
-    <AssemblyName>Entitas</AssemblyName>
+    <RootNamespace>Bosco.ECS</RootNamespace>
+    <AssemblyName>Bosco.ECS</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

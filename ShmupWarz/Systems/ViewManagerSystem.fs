@@ -13,6 +13,7 @@ open UnityEngine
 type AddViewSystem(world:World) =
 
     let _viewContainer = ((new GameObject("Views")).transform)
+    let mutable group = world.GetGroup(Matcher.AllOf(Matcher.Destroy))
 
     interface IInitializeSystem with
         member this.Initialize() =
@@ -35,4 +36,16 @@ type AddViewSystem(world:World) =
                     gameObject.transform.SetParent(_viewContainer, false)
                     e.AddView(gameObject) |> ignore
             )
+
+
+    interface IExecuteSystem with
+        member this.Execute() =
+            for e in (group.GetEntities()) do   
+                if e.hasView then 
+                    let gameObject = (e.view.gameObject):?>Object
+                    Object.Destroy(gameObject)
+                    e.RemoveView() |> ignore
+                world.DestroyEntity(e)
+
+
 

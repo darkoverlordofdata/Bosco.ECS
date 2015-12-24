@@ -110,7 +110,7 @@ module ComponentExtensions =
     [<AllowNullLiteral>]
     type ScoreComponent() =
         inherit Component()
-        member val value = 0.0f with get, set
+        member val value = 0 with get, set
 
     [<AllowNullLiteral>]
     type DestroyComponent() =

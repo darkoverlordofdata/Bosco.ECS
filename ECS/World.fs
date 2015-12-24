@@ -28,7 +28,7 @@ type EntityDestroyedDelegate = delegate of obj * EntityEventArgs -> unit
  * World
  *)
 type World (totalComponents:int) =
-      
+
   let isNull x = match x with null -> true | _ -> false
 
   let onEntityCreated                   = new Event<EntityCreatedDelegate, EntityEventArgs>() 
@@ -60,6 +60,15 @@ type World (totalComponents:int) =
     with get() = reusableEntities.Count
   member this.retainedEntitiesCount      
     with get() = retainedEntities.Count
+
+  [<DefaultValue>]
+  static val mutable private _instance:World
+  static member Create(totalComponents:int) =
+    World._instance <- new World(totalComponents)
+    World._instance
+  static member Instance with get() = World._instance
+
+  //static Instance with get() = _instance
 
   (** 
    * CreateEntity

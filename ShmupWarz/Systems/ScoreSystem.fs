@@ -10,9 +10,11 @@ open System
 open System.Collections.Generic
 open UnityEngine
 
-type MovementSystem(world:World) =
+type ScoreSystem(world:World) =
 
-    let group = world.GetGroup(Matcher.AllOf(Matcher.Position, Matcher.Velocity))
+    interface IInitializeSystem with
+        member this.Initialize() =
+            world.SetScore(0)
 
     interface IExecuteSystem with
         member this.Execute() =

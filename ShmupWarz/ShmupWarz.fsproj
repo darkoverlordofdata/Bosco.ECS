@@ -11,12 +11,12 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\shmupwarz-unity\Assets\Libraries</OutputPath>
+    <OutputPath>..\..\shmupwarz-unity\Assets\Dlls</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\shmupwarz-unity\Assets\Libraries</OutputPath>
+    <OutputPath>..\..\shmupwarz-unity\Assets\Dlls</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
@@ -31,16 +31,25 @@
       <HintPath>..\..\..\..\..\opt\Unity\Editor\Data\Managed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\opt\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Bosco">
+      <HintPath>..\..\Bosco\Bosco\bin\Release\Bosco.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Util.fs" />
     <Compile Include="Extensions\GlobalExtensions.fs" />
     <Compile Include="Extensions\ComponentExtensions.fs" />
     <Compile Include="Extensions\EntityExtensions.fs" />
     <Compile Include="Extensions\MatcherExtensions.fs" />
     <Compile Include="Extensions\WorldExtensions.fs" />
-    <Compile Include="EntityFactory.fs" />
+    <Compile Include="Extensions\EntityFactory.fs" />
+    <Compile Include="Controllers\MenuController.fs" />
+    <Compile Include="Controllers\FpsController.fs" />
+    <Compile Include="Controllers\ScoreLabelController.fs" />
+    <Compile Include="Controllers\ShrapnelController.fs" />
     <Compile Include="Systems\ViewManagerSystem.fs" />
     <Compile Include="Systems\CollisionSystem.fs" />
     <Compile Include="Systems\ColorAnimationSystem.fs" />
@@ -53,7 +62,8 @@
     <Compile Include="Systems\RenderPositionSystem.fs" />
     <Compile Include="Systems\ScaleAnimationSystem.fs" />
     <Compile Include="Systems\SoundEffectSystem.fs" />
-    <Compile Include="GameController.fs" />
+    <Compile Include="Controllers\GameController.fs" />
+    <Compile Include="Controllers\LeaderboardController.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ItemGroup>
@@ -61,5 +71,8 @@
       <Project>{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}</Project>
       <Name>Bosco.ECS</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controllers\" />
   </ItemGroup>
 </Project>

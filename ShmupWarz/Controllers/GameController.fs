@@ -20,7 +20,7 @@ type GameController () =
         world.Add(new RenderPositionSystem(world))
         world.Add(new ViewManagerSystem(world))
 
-    let world = new World(Component.TotalComponents)
+    let world = World.Create(Component.TotalComponents)
 
     (** *)
     member this.Start () =

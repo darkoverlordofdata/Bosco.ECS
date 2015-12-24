@@ -4,25 +4,19 @@ open Bosco.ECS
 open UnityEngine
 open UnityEngine.UI
 
-type FpsController () =
+type ScoreLabelController () =
     inherit MonoBehaviour ()
 
     [<DefaultValue>]
     val mutable label:Text
-    let mutable totalFrames = 0
-    let mutable fps = 0
-    let mutable deltaTime = 0.0f
-    let mutable elapsedTime = 0.0f
+    let mutable score = 0
 
     member this.Start() = 
         this.label <- this.GetComponent():>Text
+        this.label.text <- sprintf "%d" 0
 
     member this.Update() =
-        totalFrames <- totalFrames + 1
-        elapsedTime <- elapsedTime + Time.deltaTime
-        if elapsedTime > 1.0f then
-            fps <- totalFrames
-            totalFrames <- 0
-            elapsedTime <- 0.0f
+        if score <> World.Instance.score.value then
+            score <- World.Instance.score.value
+            this.label.text <- sprintf "%d" score
 
-        this.label.text <- sprintf "fps %d" fps

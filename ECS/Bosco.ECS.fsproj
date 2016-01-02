@@ -30,7 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Entitas.fs" />
+    <Compile Include="Types.fs" />
     <Compile Include="Entity.fs" />
     <Compile Include="Matcher.fs" />
     <Compile Include="Group.fs" />

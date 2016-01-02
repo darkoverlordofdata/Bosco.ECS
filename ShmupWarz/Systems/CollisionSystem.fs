@@ -10,7 +10,7 @@ open ShmupWarz
 open UnityEngine
 
 
-type Collisions =
+type CollisionTypes =
     | BulletHitEnemy
     | MineHitPlayer
 
@@ -63,10 +63,10 @@ type CollisionSystem(world:World) =
                     if collidesWith(bullet, enemy) then
                         collisionHandler(BulletHitEnemy, bullet, enemy)
 
-            let player = players.GetSingleEntity()
-            for mine in mines.GetEntities() do
-                if collidesWith(mine, player) then
-                    collisionHandler(MineHitPlayer, mine, player)
+            //let player = players.GetSingleEntity()
+            //for mine in mines.GetEntities() do
+            //    if collidesWith(mine, player) then
+            //        collisionHandler(MineHitPlayer, mine, player)
 
 
     interface IInitializeSystem with

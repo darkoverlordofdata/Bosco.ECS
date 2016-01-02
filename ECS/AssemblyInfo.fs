@@ -9,7 +9,7 @@ open System.Runtime.CompilerServices
 [<assembly:AssemblyCompany("Dark Overlord of Data")>]
 [<assembly:AssemblyProduct("BoscoECS")>]
 [<assembly:AssemblyCopyright("2015 Dark Overlord of Data")>]
-[<assembly:AssemblyTrademark("")>]
+[<assembly:AssemblyTrademark("0xd16a")>]
 [<assembly:AssemblyVersion("1.0.0.0")>]
 ()
 // The assembly version has the format {Major}.{Minor}.{Build}.{Revision}

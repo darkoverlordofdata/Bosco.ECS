@@ -1,43 +1,28 @@
 ﻿namespace ShmupWarz
 open System
-open Bosco
-open Bosco.Json
-open Bosco.Utils
+open Bosco.ECS
 open UnityEngine
 open UnityEngine.UI
-open System.Collections
-open System.Collections.Generic
 
-type LeaderboardController () =
+type FpsController () =
     inherit MonoBehaviour ()
 
-
-    //[<DefaultValue>]
-    //val mutable private data:JSONArray
+    [<DefaultValue>]
+    val mutable label:Text
+    let mutable totalFrames = 0
+    let mutable fps = 0
+    let mutable deltaTime = 0.0f
+    let mutable elapsedTime = 0.0f
 
     member this.Start() = 
+        this.label <- this.GetComponent():>Text
 
-        let MAX = 5
-        Properties.Init("shmupwarz", """[
-            {""name"":""playSfx"", ""value"":true},
-            {""name"":""playMusic"", ""value"":true}
-        ]""")
-        let data = Properties.GetLeaderboard(MAX)
+    member this.Update() =
+        totalFrames <- totalFrames + 1
+        elapsedTime <- elapsedTime + Time.deltaTime
+        if elapsedTime > 1.0f then
+            fps <- totalFrames
+            totalFrames <- 0
+            elapsedTime <- 0.0f
 
-
-        for r=0 to MAX-1 do
-            let mutable score = ""
-            let mutable yyyymmdd = ""
-
-            if r<data.Count then
-                let row = JSON.Object(data.[r])
-                score <- Convert.ToString(row.["score"])
-                yyyymmdd <- Convert.ToString(row.["date"])
-
-            let col1 = GameObject.Find("Canvas/Panel/TextRow"+(r+1).ToString()+"Date")
-            let text1 = col1.GetComponent("Text"):?>Text
-            text1.text <- yyyymmdd
-
-            let col2 = GameObject.Find("Canvas/Panel/TextRow"+(r+1).ToString()+"Score")
-            let text2 = col2.GetComponent("Text"):?>Text
-            text2.text <- score
+        this.label.text <- sprintf "fps %02d" fps

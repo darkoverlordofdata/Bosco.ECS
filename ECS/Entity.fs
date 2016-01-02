@@ -73,10 +73,10 @@ type Entity (totalComponents:int) =
   member val OnComponentReplaced        = onComponentReplaced.Publish with get
   member val OnEntityReleased           = onEntityReleased.Publish with get
 
+  member val internal refCount          = 0 with get, set                
   member val Id                         = 0 with get, set
   member val Name                       = "" with get, set
   member val IsEnabled                  = false with get, set
-  member val internal refCount          = 0 with get, set                
            
    (** 
    * AddComponent 
@@ -148,7 +148,8 @@ type Entity (totalComponents:int) =
    *)
   member this.GetComponents() =
     if componentsCache.Length = 0 then
-      componentsCache <- Array.filter ((<>)null) components
+      //componentsCache <- Array.filter ((<>)null) components
+      componentsCache <- Array.filter notNull components
     componentsCache
 
   (** 

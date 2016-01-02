@@ -2,7 +2,6 @@
 open System
 open Bosco.ECS
 open UnityEngine
-open UnityEngine.UI
 
 type ShrapnelController () =
     inherit MonoBehaviour ()

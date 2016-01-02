@@ -13,10 +13,10 @@ type ScoreLabelController () =
 
     member this.Start() = 
         this.label <- this.GetComponent():>Text
-        this.label.text <- sprintf "%d" 0
+        this.label.text <- sprintf "%05d" 0
 
     member this.Update() =
         if score <> World.Instance.score.value then
             score <- World.Instance.score.value
-            this.label.text <- sprintf "%d" score
+            this.label.text <- sprintf "%05d" score
 

@@ -18,7 +18,6 @@ type ExpiringSystem(world:World) =
     interface IExecuteSystem with
         member this.Execute() =
             for e in (group.GetEntities()) do
-                if e.hasExpires then
-                    e.expires.delay <- e.expires.delay - Time.deltaTime
-                    if e.expires.delay <= 0.0f then
-                        e.SetDestroy(true) |> ignore
+                e.expires.delay <- e.expires.delay - Time.deltaTime
+                if e.expires.delay <= 0.0f then
+                    e.SetDestroy(true) |> ignore

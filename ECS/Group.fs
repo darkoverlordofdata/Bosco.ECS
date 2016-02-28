@@ -159,7 +159,7 @@ and Group (matcher:Matcher) =
         enumerator.MoveNext() |> ignore
         this.singleEntityCache <- enumerator.Current
         this.singleEntityCacheFlag <- true
-      | 0 ->
+      | 0 -> // return a dummy 'null' entity
         this.singleEntityCache <- World.NullEntity
         this.singleEntityCacheFlag <- false
       | _ ->
@@ -243,8 +243,8 @@ and World (totalComponents:int) =
   static val mutable private _nullEntity:Entity
 
   static member Create(totalComponents:int) =
-    World._instance <- new World(totalComponents)
     World._nullEntity <- new Entity()
+    World._instance <- new World(totalComponents)
     World._instance
   static member Instance with get() = World._instance
   static member NullEntity with get() = World._nullEntity

@@ -6,6 +6,8 @@ open UnityEngine
 type GameController () =
     inherit MonoBehaviour ()
 
+    let world = World.Create(Component.TotalComponents)
+
     let createSystems(world:World) =
         world.Add(new MovementSystem(world))
         world.Add(new PlayerInputSystem(world))
@@ -20,8 +22,6 @@ type GameController () =
         world.Add(new RenderPositionSystem(world))
         world.Add(new ViewManagerSystem(world))
         world.Add(new DestroySystem(world))
-
-    let world = World.Create(Component.TotalComponents)
 
     (** *)
     member this.Start () =

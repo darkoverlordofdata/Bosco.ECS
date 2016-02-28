@@ -17,7 +17,6 @@ type RenderPositionSystem(world:World) =
     interface IExecuteSystem with
         member this.Execute() =
             for e in (group.GetEntities()) do
-                if e.hasPosition then
-                    let pos = e.position
-                    let transform = ((e.view).gameObject:?>GameObject).transform
-                    transform.position <- new Vector3(pos.x, pos.y, 0.0f)
+                let pos = e.position
+                let transform = ((e.view).gameObject:?>GameObject).transform
+                transform.position <- new Vector3(pos.x, pos.y, 0.0f)

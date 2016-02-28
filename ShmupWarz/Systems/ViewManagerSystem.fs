@@ -8,13 +8,29 @@ open System
 open System.Collections.Generic
 open UnityEngine
 
+
+type DestroySystem(world:World) =
+
+    let group = world.GetGroup(Matcher.AllOf(Matcher.Destroy))
+
+    interface IExecuteSystem with
+        member this.Execute() =
+            for e in (group.GetEntities()) do
+                if e.hasView then 
+                    let gameObject = (e.view.gameObject):?>Object
+                    Object.Destroy(gameObject)
+                    e.RemoveView() |> ignore
+                world.DestroyEntity(e)
+            
+
+
 type ViewManagerSystem(world:World) =
 
     let _viewContainer = ((new GameObject("Views")).transform)
-    let mutable group = world.GetGroup(Matcher.AllOf(Matcher.Destroy))
 
     interface IInitializeSystem with
         member this.Initialize() =
+
 
             world.GetGroup(Matcher.Resource).OnEntityAdded.AddHandler(fun sender args ->
 
@@ -37,14 +53,7 @@ type ViewManagerSystem(world:World) =
             )
 
 
-    interface IExecuteSystem with
-        member this.Execute() =
-            for e in (group.GetEntities()) do   
-                if e.hasView then 
-                    let gameObject = (e.view.gameObject):?>Object
-                    Object.Destroy(gameObject)
-                    e.RemoveView() |> ignore
-                world.DestroyEntity(e)
+    
 
 
-
+    

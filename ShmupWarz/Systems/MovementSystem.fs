@@ -20,6 +20,7 @@ type MovementSystem(world:World) =
             let delta = Time.deltaTime/100.0f
 
             for e in (group.GetEntities()) do
-                e.position.x <- e.position.x + (e.velocity.x * delta)
-                e.position.y <- e.position.y + (e.velocity.y * delta)
-                e.position.z <- e.position.z + (e.velocity.z * delta)
+                if e.hasPosition && e.hasVelocity then
+                    e.position.x <- e.position.x + (e.velocity.x * delta)
+                    e.position.y <- e.position.y + (e.velocity.y * delta)
+                    e.position.z <- e.position.z + (e.velocity.z * delta)

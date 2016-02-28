@@ -113,7 +113,7 @@ type Group (matcher:Matcher) =
     if removed then
       entitiesCache <- Array.empty<Entity>
       singleEntityCache <- null
-      entity.Retain()
+      entity.Release()
     removed
 
   //member this.addEntity(entity) =

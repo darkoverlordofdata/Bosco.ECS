@@ -65,7 +65,7 @@ module EntityExtensions =
                 else
                     this.RemoveComponent(Component.Bullet) |> ignore
 
-        member this.IsBullet(value) =
+        member this.SetBullet(value) =
             this.isBullet <- value
             this
 
@@ -153,7 +153,7 @@ module EntityExtensions =
                 else
                     this.RemoveComponent(Component.Enemy) |> ignore
 
-        member this.IsEnemy(value) =
+        member this.SetEnemy(value) =
             this.isEnemy <- value
             this
 
@@ -209,7 +209,7 @@ module EntityExtensions =
                 else
                     this.RemoveComponent(Component.Firing) |> ignore
 
-        member this.IsFiring(value) =
+        member this.SetFiring(value) =
             this.isFiring <- value
             this
 
@@ -267,7 +267,7 @@ module EntityExtensions =
                 else
                     this.RemoveComponent(Component.ParallaxStar) |> ignore
 
-        member this.IsParallaxStar(value) =
+        member this.SetParallaxStar(value) =
             this.isParallaxStar <- value
             this
 
@@ -284,7 +284,7 @@ module EntityExtensions =
                 else
                     this.RemoveComponent(Component.Player) |> ignore
 
-        member this.IsPlayer(value) =
+        member this.SetPlayer(value) =
             this.isPlayer <- value
             this
 
@@ -551,7 +551,7 @@ module EntityExtensions =
                 else
                     this.RemoveComponent(Component.Destroy) |> ignore
 
-        member this.IsDestroy(value) =
+        member this.SetDestroy(value) =
             this.isDestroy <- value
             this
 
@@ -767,7 +767,7 @@ module EntityExtensions =
                 else
                     this.RemoveComponent(Component.Mine) |> ignore
 
-        member this.IsMine(value) =
+        member this.SetMine(value) =
             this.isMine <- value
             this
 

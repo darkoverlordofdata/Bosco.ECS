@@ -28,7 +28,7 @@ module EntityFactory =
                 .AddBounds(1.0f)
                 .AddHealth(100.0f, 100.0f)
                 .AddPosition(pos.x, pos.y, pos.z)
-                .IsPlayer(true)
+                .SetPlayer(true)
                 .AddResource("fighter")
 
         (** 
@@ -45,7 +45,7 @@ module EntityFactory =
                 .AddPosition(x, y, 0.0f)
                 .AddExpires(2.0f)
                 .AddSoundEffect(float32(EFFECT_PEW))
-                .IsBullet(true)
+                .SetBullet(true)
                 .AddResource("bullet")
 
         (** 
@@ -64,7 +64,7 @@ module EntityFactory =
                 .AddVelocity(0.0f, float32(-velocity), 0.0f)
                 .AddPosition(pos.x, pos.y, pos.z)
                 .AddHealth(float32(health*10), float32(health*10))
-                .IsMine(true)
+                .SetMine(true)
                 .AddResource("mine"+health.ToString())
 
         (** 
@@ -109,7 +109,7 @@ module EntityFactory =
                 .AddPosition(pos.x, pos.y, pos.z)
                 .AddVelocity(0.0f, float32(-40*3), 0.0f)
                 .AddHealth(10.0f, 10.0f)
-                .IsEnemy(true)
+                .SetEnemy(true)
                 .AddResource("enemy1")
 
         (** 
@@ -126,7 +126,7 @@ module EntityFactory =
                 .AddPosition(pos.x, pos.y, pos.z)
                 .AddVelocity(0.0f, float32(-30*3), 0.0f)
                 .AddHealth(20.0f, 20.0f)
-                .IsEnemy(true)
+                .SetEnemy(true)
                 .AddResource("enemy2")
 
         (** 
@@ -143,7 +143,7 @@ module EntityFactory =
                 .AddPosition(pos.x, pos.y, pos.z)
                 .AddVelocity(0.0f, float32(-20*3), 0.0f)
                 .AddHealth(40.0f, 40.0f)
-                .IsEnemy(true)
+                .SetEnemy(true)
                 .AddResource("enemy3")
 
         (** 

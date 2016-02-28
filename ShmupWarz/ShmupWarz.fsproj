@@ -80,4 +80,7 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Extensions\WorldExtensionsz.fs" />
+  </ItemGroup>
 </Project>

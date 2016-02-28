@@ -61,6 +61,9 @@ type World (totalComponents:int) =
   member this.retainedEntitiesCount      
     with get() = retainedEntities.Count
 
+  member this.ReusableEntities
+    with get() = reusableEntities
+
   [<DefaultValue>]
   static val mutable private _instance:World
   static member Create(totalComponents:int) =
@@ -78,12 +81,15 @@ type World (totalComponents:int) =
   member this.CreateEntity(name) =
     let mutable entity = 
       match reusableEntities.Count with
-      | 0 -> new Entity(totalComponents+1)
-      | _ -> reusableEntities.Pop()
-    
+      | 0 -> 
+        new Entity(totalComponents+1)
+      | _ -> 
+        reusableEntities.Pop()
+
     entity.IsEnabled <- true
     entity.Id <- creationIndex+1
     entity.Name <- name
+    entity.Retain()
     entity.OnComponentAdded.AddHandler(this.updateGroupsComponentAdded)
     entity.OnComponentRemoved.AddHandler(this.updateGroupsComponentRemoved)
     entity.OnComponentReplaced.AddHandler(this.updateGroupsComponentReplaced)
@@ -114,7 +120,7 @@ type World (totalComponents:int) =
       reusableEntities.Push(entity)
     else
       retainedEntities.Add(entity) |> ignore
-    entity.Release(this)
+    entity.Release()
   
 
   (** 
@@ -178,7 +184,7 @@ type World (totalComponents:int) =
   member this.ClearGroups() =
     for group in groups.Values do
       for i=0 to group.GetEntities().Length-1 do
-        group.GetEntities().[i].Release(group)
+        group.GetEntities().[i].Release()
       onGroupCleared.Trigger(this, GroupEventArgs(group))
 
     groups.Clear()
@@ -238,11 +244,11 @@ type World (totalComponents:int) =
       let entity = sender:?>Entity
 
       if entity.IsEnabled then
-        failwithf "Entity is not destroyed, cannot release entity %s" (entity.ToString())
+        failwithf "Entity is not destroyed, cannot release entity %d/%s" (entity.refCount) (entity.ToString())
 
       entity.OnEntityReleased.RemoveHandler(this.onEntityReleased)
       retainedEntities.Remove(entity) |> ignore
-      reusableEntities.Push(entity)
+      //reusableEntities.Push(entity)
     )
 
   (** 

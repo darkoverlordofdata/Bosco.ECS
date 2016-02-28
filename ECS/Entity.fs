@@ -77,7 +77,18 @@ type Entity (totalComponents:int) =
   member val Id                         = 0 with get, set
   member val Name                       = "" with get, set
   member val IsEnabled                  = false with get, set
-           
+       
+  member this.CHECK() =
+    let mutable result = false
+    for i = 0 to components.Length-1 do
+      if not(isNull(components.[i])) then
+        result <- true
+    result
+
+  member this.Initialize() =
+      for i = 0 to components.Length-1 do
+        components.[i] <- null
+               
    (** 
    * AddComponent 
    *
@@ -211,9 +222,10 @@ type Entity (totalComponents:int) =
    * Release (reference count)
    *
    *)
-  member this.Release(owner:obj) =
+  member this.Release() =
     this.refCount <- this.refCount - 1
     if this.refCount = 0 then
+      //WHY??? - should't get triggered...
       onEntityReleased.Trigger(this, new EntityReleasedArgs())
     elif this.refCount < 0 then
       failwithf "Entity is already released %s" (this.ToString())
@@ -247,6 +259,8 @@ type Entity (totalComponents:int) =
    *)
   member this.destroy() =
     this.RemoveAllComponents()
+    componentsCache <- Array.empty<Component>
+    this.Name <- ""
     this.IsEnabled <- false
 
   (** 

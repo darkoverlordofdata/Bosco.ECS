@@ -19,6 +19,7 @@ type GameController () =
         world.Add(new RemoveOffscreenShipsSystem(world))
         world.Add(new RenderPositionSystem(world))
         world.Add(new ViewManagerSystem(world))
+        world.Add(new DestroySystem(world))
 
     let world = World.Create(Component.TotalComponents)
 

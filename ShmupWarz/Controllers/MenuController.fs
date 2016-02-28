@@ -2,19 +2,20 @@
 open System
 open Bosco.ECS
 open UnityEngine
+open UnityEngine.SceneManagement
 
 type MenuController () =
     inherit MonoBehaviour ()
 
     member this.StartGame() =
-        Application.LoadLevel("Game Scene")
+        SceneManager.LoadScene("Game Scene")
 
     member this.LoadLeaderboard() =
-        Application.LoadLevel("LeaderboardScene")
+        SceneManager.LoadScene("LeaderboardScene")
 
     member this.LoadCredits() =
-        Application.LoadLevel("CreditsScene")
+        SceneManager.LoadScene("CreditsScene")
 
     member this.LoadMenu() =
-        Application.LoadLevel("MenuScene")
+        SceneManager.LoadScene("MenuScene")
 

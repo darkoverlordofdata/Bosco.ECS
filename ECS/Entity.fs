@@ -37,7 +37,6 @@ type ComponentReplacedDelegate = delegate of obj * ComponentReplacedArgs -> unit
 (** 
  * Entity
  *)
-[<AllowNullLiteral>]
 type Entity (totalComponents:int) =
 
   let isNull x = match x with null -> true | _ -> false
@@ -68,6 +67,8 @@ type Entity (totalComponents:int) =
   let mutable componentsCache           = Array.empty<Component>
   let mutable toStringCache             = "" 
 
+  new () = Entity(0)
+
   member val OnComponentAdded           = onComponentAdded.Publish with get
   member val OnComponentRemoved         = onComponentRemoved.Publish with get
   member val OnComponentReplaced        = onComponentReplaced.Publish with get
@@ -78,17 +79,12 @@ type Entity (totalComponents:int) =
   member val Name                       = "" with get, set
   member val IsEnabled                  = false with get, set
        
-  member this.CHECK() =
-    let mutable result = false
-    for i = 0 to components.Length-1 do
-      if not(isNull(components.[i])) then
-        result <- true
-    result
+  member this.IsNull
+    with get() = if totalComponents = 0 then true else false
 
-  member this.Initialize() =
-      for i = 0 to components.Length-1 do
-        components.[i] <- null
-               
+  member this.NotNull
+    with get() = if totalComponents = 0 then false else true
+
    (** 
    * AddComponent 
    *

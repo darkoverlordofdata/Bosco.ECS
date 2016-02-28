@@ -66,10 +66,15 @@ type World (totalComponents:int) =
 
   [<DefaultValue>]
   static val mutable private _instance:World
+  [<DefaultValue>]
+  static val mutable private _nullEntity:World
+
   static member Create(totalComponents:int) =
     World._instance <- new World(totalComponents)
+    World._nullEntity <- new Entity()
     World._instance
   static member Instance with get() = World._instance
+  static member NullEntity with get() = World._nullEntity
 
   //static Instance with get() = _instance
 

@@ -22,7 +22,7 @@ module WorldExtensions =
             with get() = this.scoreEntity.score
 
         member this.hasScore
-            with get() = notNull(this.scoreEntity)
+            with get() = this.scoreEntity.NotNull
 
         member this.SetScore(newValue) =
             if this.hasScore then
@@ -33,7 +33,7 @@ module WorldExtensions =
 
         member this.ReplaceScore(newValue) =
             let entity = this.scoreEntity
-            if isNull(entity) then
+            if entity.IsNull then
                 entity = this.SetScore(newValue) |> ignore
             else
                 entity.ReplaceScore(newValue) |> ignore
@@ -51,7 +51,7 @@ module WorldExtensions =
             with get() = this.mouseEntity.mouse
 
         member this.hasMouse
-            with get() = notNull(this.mouseEntity)
+            with get() = this.mouseEntity.NotNull
 
         member this.SetMouse(newValue) =
             if this.hasMouse then
@@ -62,7 +62,7 @@ module WorldExtensions =
 
         member this.ReplaceMouse(newValue) =
             let entity = this.mouseEntity
-            if isNull(entity) then
+            if entity.IsNull then
                 entity = this.SetMouse(newValue) |> ignore
             else
                 entity.ReplaceMouse(newValue) |> ignore
@@ -78,10 +78,10 @@ module WorldExtensions =
 
         member this.isFiring
             with get() =
-                notNull(this.firingEntity)
+                this.firingEntity.NotNull
             and  set(value) =
                 let entity = this.firingEntity
-                if value <> notNull(entity) then
+                if value <> entity.NotNull then
                     if value then
                         this.CreateEntity("Firing").isFiring <- true
                     else
@@ -96,7 +96,7 @@ module WorldExtensions =
             with get() = this.statusEntity.status
 
         member this.hasStatus
-            with get() = notNull(this.statusEntity)
+            with get() = this.statusEntity.NotNull
 
         member this.SetStatus(newValue) =
             if this.hasStatus then
@@ -107,7 +107,7 @@ module WorldExtensions =
 
         member this.ReplaceStatus(newValue) =
             let entity = this.statusEntity
-            if isNull(entity) then
+            if entity.IsNull then
                 entity = this.SetStatus(newValue) |> ignore
             else
                 entity.ReplaceStatus(newValue) |> ignore
@@ -123,10 +123,10 @@ module WorldExtensions =
 
         member this.isPlayer
             with get() =
-                notNull(this.playerEntity)
+                this.playerEntity.NotNull
             and  set(value) =
                 let entity = this.playerEntity
-                if value <> notNull(entity) then
+                if value <> entity.NotNull then
                     if value then
                         this.CreateEntity("Player").isPlayer <- true
                     else

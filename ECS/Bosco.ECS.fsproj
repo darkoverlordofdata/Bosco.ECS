@@ -33,10 +33,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Types.fs" />
-    <Compile Include="Entity.fs" />
-    <Compile Include="Matcher.fs" />
-    <Compile Include="Group.fs" />
+    <Compile Include="ECS.fs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft SDKs\F#\3.1\Framework\v4.0\Microsoft.FSharp.Targets" />
   <ProjectExtensions>
@@ -51,9 +48,4 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <None Include="ecs.fs" />
-    <None Include="ECS.fs" />
-    <None Include="World.fs" />
-  </ItemGroup>
 </Project>

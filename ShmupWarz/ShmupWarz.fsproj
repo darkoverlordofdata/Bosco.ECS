@@ -35,9 +35,6 @@
       <HintPath>..\..\..\..\..\opt\Unity\Editor\Data\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Bosco">
-      <HintPath>..\..\Bosco\Bosco\bin\Release\Bosco.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\..\shmupwarz-unity\Library\ScriptAssemblies\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
@@ -75,6 +72,10 @@
     <ProjectReference Include="..\ECS\Bosco.ECS.fsproj">
       <Project>{3D15FE85-512D-4FF8-B583-57DFA97BBAC7}</Project>
       <Name>Bosco.ECS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lib\Bosco\Bosco.csproj">
+      <Project>{F3F85C3C-CA13-48E9-9106-F84B8A41CE2A}</Project>
+      <Name>Bosco</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

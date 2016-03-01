@@ -1,4 +1,4 @@
-﻿ocamlnamespace ShmupWarz
+﻿namespace ShmupWarz
 open System
 open Bosco
 open Bosco.Json

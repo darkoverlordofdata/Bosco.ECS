@@ -4,6 +4,17 @@ open Bosco.ECS
 open UnityEngine
 open UnityEngine.SceneManagement
 
+(**
+ * MenuController
+ *
+ * The main menu switchboard for the application
+ *
+ * Attached to Assets/Scenes/MenuScene/UIManager
+ * Attached to Assets/Scenes/LeaderboardScene/UIManager
+ * Attached to Assets/Scenes/CreditsScene/UIManager
+ * Attached to Assets/Scenes/Game Scene/UIManager
+ *)
+
 type MenuController () =
     inherit MonoBehaviour ()
 

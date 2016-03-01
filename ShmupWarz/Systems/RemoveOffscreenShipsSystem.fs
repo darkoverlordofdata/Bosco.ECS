@@ -18,5 +18,5 @@ type RemoveOffscreenShipsSystem(world:World) =
     interface IExecuteSystem with
         member this.Execute() =
             for e in (group.GetEntities()) do
-                if e.position.y < (0.0f - e.bounds.radius) then
+                if e.position.y < (0.0f - e.bounds.radius*4.0f) then
                     if not e.isPlayer then e.SetDestroy(true) |> ignore

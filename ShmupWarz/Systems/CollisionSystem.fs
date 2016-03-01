@@ -36,7 +36,7 @@ type CollisionSystem(world:World) =
         | BulletHitEnemy ->
             let pos = weapon.position
             world.CreateSmallExplosion(pos.x, pos.y) |> ignore
-            //ShrapnelController.Instance.Hit(pos.x, pos.y) |> ignore
+            ShrapnelController.Spawn(pos.x, pos.y) |> ignore
             weapon.SetDestroy(true) |> ignore
 
             let mutable health = ship.health

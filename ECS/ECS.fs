@@ -13,14 +13,14 @@ module CoreECS =
   let isNull x = match x with null -> true | _ -> false
   let notNull x = match x with null -> false | _ -> true
 
-
   (**
     * Base Component Type
     *)
   [<AbstractClass>][<AllowNullLiteral>]
   type Component() = 
+    class
       static member None with get() = 0
-
+    end
   (**
     * Interface: System with an Initialization phase
     * Initialize is called before the game loop is started
@@ -34,7 +34,6 @@ module CoreECS =
     *)
   and IExecuteSystem =
     abstract member Execute: unit -> unit
-
 
   (** 
    * Entity Events
@@ -58,13 +57,10 @@ module CoreECS =
     member this.previous = previous
     member this.replacement = replacement
 
-
   and EntityReleasedDelegate = delegate of obj * EntityReleasedArgs -> unit
   and ComponentAddedDelegate = delegate of obj * ComponentAddedArgs -> unit
   and ComponentRemovedDelegate = delegate of obj * ComponentRemovedArgs -> unit
   and ComponentReplacedDelegate = delegate of obj * ComponentReplacedArgs -> unit
-
-
 
   (** 
    * Entity
@@ -96,11 +92,10 @@ module CoreECS =
     let mutable componentsCache           = Array.empty<Component>
     let mutable toStringCache             = "" 
 
-    member val OnComponentAdded           = onComponentAdded.Publish with get
-    member val OnComponentRemoved         = onComponentRemoved.Publish with get
-    member val OnComponentReplaced        = onComponentReplaced.Publish with get
-    member val OnEntityReleased           = onEntityReleased.Publish with get
-
+    member val OnComponentAdded           = onComponentAdded.Publish
+    member val OnComponentRemoved         = onComponentRemoved.Publish
+    member val OnComponentReplaced        = onComponentReplaced.Publish
+    member val OnEntityReleased           = onEntityReleased.Publish
     member val internal refCount          = 0 with get, set                
     member val Id                         = 0 with get, set
     member val Name                       = "" with get, set
@@ -115,6 +110,7 @@ module CoreECS =
       with get() = if totalComponents = 0 then true else false
     member this.NotNull
       with get() = if totalComponents = 0 then false else true
+    static member NullEntity with get() = new Entity()
 
      (** 
      * AddComponent 
@@ -186,7 +182,6 @@ module CoreECS =
      *)
     member this.GetComponents() =
       if componentsCache.Length = 0 then
-        //componentsCache <- Array.filter ((<>)null) components
         componentsCache <- Array.filter notNull components
       componentsCache
 
@@ -199,7 +194,6 @@ module CoreECS =
     member this.HasComponent(index:int) =
       notNull(components.[index])
 
-
     (** 
      * HasComponents
      *
@@ -208,7 +202,6 @@ module CoreECS =
      *)
     member this.HasComponents(indices:int[]) =
       let mutable flag = true
-
       for index in indices do
         if isNull(components.[index]) then
           flag <- false
@@ -222,7 +215,6 @@ module CoreECS =
      *)
     member this.HasAnyComponent(indices:int[]) =
       let mutable flag = false
-
       for index in indices do
         if notNull(components.[index]) then
           flag <- true
@@ -233,7 +225,6 @@ module CoreECS =
      *
      *)
     member this.RemoveAllComponents() =
-      
       for i = 0 to components.Length-1 do
         if notNull(components.[i]) then
           this.replaceComponent(i, null)
@@ -308,7 +299,6 @@ module CoreECS =
           onComponentRemoved.Trigger(this, new ComponentRemovedArgs(index, previousComponent))
         else
           onComponentReplaced.Trigger(this, new ComponentReplacedArgs(index, previousComponent, replacement))
-
 
   and EntityEqualityComparer() =
     static member comparer with get() = new EntityEqualityComparer()
@@ -410,8 +400,6 @@ module CoreECS =
       let matchesNoneOf = if _noneOfIndices.Length = 0 then true else not(entity.HasAnyComponent(_allOfIndices))
       matchesAllOf && matchesAnyOf && matchesNoneOf
 
-
-
     (** 
      * AllOf 
      *
@@ -474,10 +462,7 @@ module CoreECS =
      * @returns the string representation of this matcher
      *)
     override this.ToString() =
-
-
       if toStringCache = "" then
-
         let sb = new StringBuilder()
         toStringHelper(sb, "AllOf", _allOfIndices)
         toStringHelper(sb, "AnyOf", _anyOfIndices)
@@ -512,22 +497,21 @@ module CoreECS =
     [<DefaultValue>] val mutable singleEntityCache:Entity
     [<DefaultValue>] val mutable singleEntityCacheFlag:bool
 
-    let mutable singleEntityValue = new Entity()
 
     let onEntityAdded                     = new Event<GroupChangedDelegate, GroupChangedArgs>()
     let onEntityRemoved                   = new Event<GroupChangedDelegate, GroupChangedArgs>()
     let onEntityUpdated                   = new Event<GroupUpdatedDelegate, GroupUpdatedArgs>()
     let entities:HashSet<Entity>          = new HashSet<Entity>(EntityEqualityComparer.comparer)
+    let mutable singleEntityValue         = new Entity()
     let mutable entitiesCache             = Array.empty<Entity>
     let mutable toStringCache             = ""
 
-    member val OnEntityAdded              = onEntityAdded.Publish with get
-    member val OnEntityRemoved            = onEntityRemoved.Publish with get
-    member val OnEntityUpdated            = onEntityUpdated.Publish with get
-    member val matcher                    = matcher with get
+    member val OnEntityAdded              = onEntityAdded.Publish
+    member val OnEntityRemoved            = onEntityRemoved.Publish
+    member val OnEntityUpdated            = onEntityUpdated.Publish
+    member val matcher                    = matcher
 
-    member this.count                     
-      with get() = entities.Count
+    member this.count                     with get() = entities.Count
 
     (** 
      * HandleEntitySilently
@@ -552,12 +536,6 @@ module CoreECS =
         this.addEntity(entity, index, comp)
       else
         this.removeEntity(entity, index, comp)
-
-    //member internal this.handleEntity(entity) =
-    //  match matcher.Matches(entity) with
-    //  | true -> this.addEntity(entity)
-    //  | _ -> this.removeEntity(entity)
-
 
     (** 
      * HandleEntity
@@ -599,11 +577,6 @@ module CoreECS =
         entity.Release()
       removed
 
-    //member this.addEntity(entity) =
-    //  match addEntitySilently(entity) with
-    //  | true -> this.OnEntityAdded
-    //  | _ -> null
-
     member this.addEntity(entity, index, comp) =
       if this.addEntitySilently(entity) then
         onEntityAdded.Trigger(this, new GroupChangedArgs(entity, index, comp))
@@ -642,7 +615,7 @@ module CoreECS =
           this.singleEntityCache <- enumerator.Current
           this.singleEntityCacheFlag <- true
         | 0 -> // return a dummy 'null' entity
-          this.singleEntityCache <- World.NullEntity
+          this.singleEntityCache <- Entity.NullEntity
           this.singleEntityCacheFlag <- false
         | _ ->
           failwithf "Single Entity Execption %s" (matcher.ToString())
@@ -658,7 +631,6 @@ module CoreECS =
         entitiesCache <- (Array.zeroCreate entities.Count)  
         entities.CopyTo(entitiesCache)
       entitiesCache
-
 
   (** 
    * World Events
@@ -677,12 +649,10 @@ module CoreECS =
   and EntityWillBeDestroyedDelegate = delegate of obj * EntityEventArgs -> unit
   and EntityDestroyedDelegate = delegate of obj * EntityEventArgs -> unit
 
-
-
   (** 
    * World
    *)
-  and World (totalComponents:int) =
+  and World (totalComponents:int) as this =
 
     let onEntityCreated                   = new Event<EntityCreatedDelegate, EntityEventArgs>() 
     let onEntityWillBeDestroyed           = new Event<EntityWillBeDestroyedDelegate, EntityEventArgs>()
@@ -699,37 +669,22 @@ module CoreECS =
     let mutable creationIndex             = 0
     let mutable entitiesCache             = (Array.zeroCreate 0)
 
-    member val OnEntityCreated            = onEntityCreated.Publish with get
-    member val OnEntityWillBeDestroyed    = onEntityWillBeDestroyed.Publish with get
-    member val OnEntityDestroyed          = onEntityDestroyed.Publish with get
-    member val OnGroupCreated             = onGroupCreated.Publish with get
-    member val OnGroupCleared             = onGroupCleared.Publish with get
-
-    member this.totalComponents 
-      with get() = totalComponents 
-    member this.count 
-      with get() = entities.Count
-    member this.reusableEntitiesCount      
-      with get() = reusableEntities.Count
-    member this.retainedEntitiesCount      
-      with get() = retainedEntities.Count
-
-    member this.ReusableEntities
-      with get() = reusableEntities
-
     [<DefaultValue>]
     static val mutable private _instance:World
-    [<DefaultValue>]
-    static val mutable private _nullEntity:Entity
-
-    static member Create(totalComponents:int) =
-      World._nullEntity <- new Entity()
-      World._instance <- new World(totalComponents)
-      World._instance
     static member Instance with get() = World._instance
-    static member NullEntity with get() = World._nullEntity
+    do World._instance <- this
 
-    //static Instance with get() = _instance
+    member val OnEntityCreated            = onEntityCreated.Publish
+    member val OnEntityWillBeDestroyed    = onEntityWillBeDestroyed.Publish
+    member val OnEntityDestroyed          = onEntityDestroyed.Publish
+    member val OnGroupCreated             = onGroupCreated.Publish
+    member val OnGroupCleared             = onGroupCleared.Publish
+
+    member this.totalComponents           with get() = totalComponents 
+    member this.count                     with get() = entities.Count
+    member this.reusableEntitiesCount     with get() = reusableEntities.Count
+    member this.retainedEntitiesCount     with get() = retainedEntities.Count
+    member this.ReusableEntities          with get() = reusableEntities
 
     (** 
      * CreateEntity
@@ -779,7 +734,6 @@ module CoreECS =
       else
         retainedEntities.Add(entity) |> ignore
       entity.Release()
-    
 
     (** 
      * DestroyAllEntities
@@ -811,7 +765,6 @@ module CoreECS =
         entitiesCache <- (Array.zeroCreate entities.Count)
         entities.CopyTo(entitiesCache)
       entitiesCache
-
 
     (** 
      * GetGroup
@@ -848,7 +801,6 @@ module CoreECS =
       groups.Clear()
       for i=0 to groupsForIndex.Length-1 do
         groupsForIndex.[i] <- null
-
 
     (** 
      * ResetCreationIndex
@@ -925,7 +877,6 @@ module CoreECS =
         executeSystems.Add(executeSystem)
       | _ -> ignore()
 
-
     (** 
      * Initialize 
      *
@@ -941,5 +892,3 @@ module CoreECS =
     member this.Execute() =
       for system in executeSystems do
         system.Execute()
-
-

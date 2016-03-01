@@ -1,4 +1,4 @@
-﻿namespace ShmupWarz
+﻿ocamlnamespace ShmupWarz
 open System
 open Bosco
 open Bosco.Json
@@ -7,6 +7,15 @@ open UnityEngine
 open UnityEngine.UI
 open System.Collections
 open System.Collections.Generic
+
+(**
+ * LeaderboardController
+ *
+ * The Game Leaderboard
+ * Display Scores
+ *
+ * Attached to Assets/Scenes/LeaderboardScene/LeaderboardController
+ *)
 
 type LeaderboardController () =
     inherit MonoBehaviour ()

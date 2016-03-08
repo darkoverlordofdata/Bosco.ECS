@@ -10,22 +10,36 @@ module CoreECS =
   open System.Text
   open System.Collections.Generic
 
-  let isNull x = match x with null -> true | _ -> false
-  let notNull x = match x with null -> false | _ -> true
+  let IsNull x = match x with null -> true | _ -> false
+  let NotNull x = match x with null -> false | _ -> true
 
   (**
     * Base Component Type
     *)
   [<AbstractClass>][<AllowNullLiteral>]
-  type Component() = 
-    class
-      static member None with get() = 0
-    end
+  type Component() = class end
+
+  (**
+   * Component Active Pattern  
+   * parse component class name
+   *)
+  let (|Component|) (s:string) =
+    let s0 = s.Split(if s.IndexOf('+') = -1 then '.' else '+')
+    let s1 = s0.[1]
+    if s1.EndsWith("Component") then
+      s1.Substring(0,s1.LastIndexOf("Component"))
+    else
+      s1
+
+  (** parse component class name **)
+  let ComponentName = function
+    | Component (c) -> c
+
   (**
     * Interface: System with an Initialization phase
     * Initialize is called before the game loop is started
     *)
-  and IInitializeSystem =
+  type IInitializeSystem =
     abstract member Initialize: unit -> unit
 
   (**
@@ -66,23 +80,6 @@ module CoreECS =
    * Entity
    *)
   and Entity (totalComponents:int) =
-
-    (**
-     * Component Active Pattern  
-     * parse component class name
-     *)
-    let (|Component|) (s:string) =
-        let s0 = s.Split(if s.IndexOf('+') = -1 then '.' else '+')
-        let s1 = s0.[1]
-        if s1.EndsWith("Component") then
-            s1.Substring(0,s1.LastIndexOf("Component"))
-        else
-            s1
-
-    (** parse component class name **)
-    let parsec s =
-        match s with 
-        | Component (c) -> c
 
     let onComponentAdded                  = new Event<ComponentAddedDelegate, ComponentAddedArgs>()
     let onComponentRemoved                = new Event<ComponentRemovedDelegate, ComponentRemovedArgs>()
@@ -159,7 +156,7 @@ module CoreECS =
    
       if this.HasComponent(index) then
         this.replaceComponent(index, c)
-      elif notNull(c) then
+      elif NotNull(c) then
         this.AddComponent(index, c) |> ignore
       this
 
@@ -182,7 +179,7 @@ module CoreECS =
      *)
     member this.GetComponents() =
       if componentsCache.Length = 0 then
-        componentsCache <- Array.filter notNull components
+        componentsCache <- Array.filter NotNull components
       componentsCache
 
     (** 
@@ -192,7 +189,7 @@ module CoreECS =
      * @returns true if entity has component at index
      *)
     member this.HasComponent(index:int) =
-      notNull(components.[index])
+      NotNull(components.[index])
 
     (** 
      * HasComponents
@@ -203,7 +200,7 @@ module CoreECS =
     member this.HasComponents(indices:int[]) =
       let mutable flag = true
       for index in indices do
-        if isNull(components.[index]) then
+        if IsNull(components.[index]) then
           flag <- false
       flag
 
@@ -216,7 +213,7 @@ module CoreECS =
     member this.HasAnyComponent(indices:int[]) =
       let mutable flag = false
       for index in indices do
-        if notNull(components.[index]) then
+        if NotNull(components.[index]) then
           flag <- true
       flag
 
@@ -226,7 +223,7 @@ module CoreECS =
      *)
     member this.RemoveAllComponents() =
       for i = 0 to components.Length-1 do
-        if notNull(components.[i]) then
+        if NotNull(components.[i]) then
           this.replaceComponent(i, null)
 
     (** 
@@ -262,9 +259,9 @@ module CoreECS =
         sb.Append(this.Id.ToString()) |> ignore
         sb.Append(")") |> ignore
         sb.Append("(") |> ignore
-        let c = Array.filter notNull components
+        let c = Array.filter NotNull components
         for i = 0 to c.Length-1 do
-          sb.Append(parsec(c.[i].GetType().ToString())) |> ignore
+          sb.Append(ComponentName(c.[i].GetType().ToString())) |> ignore
           if i < c.Length-1 then sb.Append(",") |> ignore
         sb.Append(")") |> ignore
         toStringCache <- sb.ToString()
@@ -782,7 +779,7 @@ module CoreECS =
           group.HandleEntitySilently(entity) |> ignore
         groups.Add(matcher.ToString(), group) |> ignore
         for index in matcher.Indices do
-          if (isNull(groupsForIndex.[index])) then
+          if (IsNull(groupsForIndex.[index])) then
             groupsForIndex.[index] <- new ResizeArray<Group>()
           groupsForIndex.[index].Add(group)
         onGroupCreated.Trigger(this, new GroupEventArgs(group))
@@ -816,7 +813,7 @@ module CoreECS =
     member this.updateGroupsComponentAdded =
       new ComponentAddedDelegate(fun sender evt ->
         let groups = groupsForIndex.[evt.index]
-        if not(isNull(groups)) then
+        if not(IsNull(groups)) then
           for group in groups do
             group.HandleEntity(sender:?>Entity, evt.index, evt.newComponent)
       )
@@ -828,7 +825,7 @@ module CoreECS =
     member this.updateGroupsComponentRemoved =
       new ComponentRemovedDelegate(fun sender evt ->
         let groups = groupsForIndex.[evt.index]
-        if not(isNull(groups)) then
+        if not(IsNull(groups)) then
           for group in groups do
             group.HandleEntity(sender:?>Entity, evt.index, evt.previous)
       )
@@ -840,7 +837,7 @@ module CoreECS =
     member this.updateGroupsComponentReplaced =
       new ComponentReplacedDelegate(fun sender evt ->
         let groups = groupsForIndex.[int evt.index]
-        if not(isNull(groups)) then
+        if not(IsNull(groups)) then
           for group in groups do
             group.UpdateEntity(sender:?>Entity, evt.index, evt.previous, evt.replacement)
       )

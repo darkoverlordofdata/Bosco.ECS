@@ -22,6 +22,7 @@ type ScaleAnimationSystem(world:World) =
                     let scale = e.scale
                     scale.x <- scale.x + (scaleAnimation.speed * Time.deltaTime)
                     scale.y <- scale.x
+                    Debug.Log(sprintf "%s %f %f %f" e.Name scale.x scaleAnimation.speed Time.deltaTime)
                     if scale.x > scaleAnimation.max then
                         scale.x <- scaleAnimation.max
                         scale.y <- scale.x
